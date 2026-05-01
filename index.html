@@ -33,8 +33,6 @@ body{font-family:var(--ui);background:var(--paper2);color:var(--ink);font-size:1
 .hdr-icon svg{width:16px;height:16px;fill:#fff}
 .hdr-name{font-size:14px;font-weight:700;color:var(--ink)}
 .hdr-sub{font-size:11px;color:var(--ink3);margin-top:1px}
-
-/* Auto-save bar */
 .save-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;flex-wrap:wrap}
 .save-dot{width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;transition:background .3s}
 .save-dot.saved{background:#22c55e}
@@ -50,8 +48,6 @@ body{font-family:var(--ui);background:var(--paper2);color:var(--ink);font-size:1
 .sb.primary:hover{background:var(--green-dk)}
 .sb.danger{color:var(--red);border-color:rgba(163,45,45,.3)}
 .sb.danger:hover{background:#fff0f0}
-
-/* Saves list modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal{background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
@@ -70,11 +66,8 @@ body{font-family:var(--ui);background:var(--paper2);color:var(--ink);font-size:1
 .si-btn.del{color:var(--red);border-color:rgba(163,45,45,.3)}
 .si-btn.del:hover{background:#fff0f0}
 .empty-saves{text-align:center;padding:24px 12px;color:var(--ink3);font-size:13px}
-
-/* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:99px;font-size:12px;font-weight:600;z-index:2000;transition:transform .25s ease,opacity .25s ease;opacity:0;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
 .steps{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:10px;overflow:hidden}
 .step{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 3px;border:none;background:none;cursor:pointer;color:var(--ink3);font-size:10px;font-family:var(--ui);font-weight:600;border-bottom:2px solid transparent;transition:all .15s;position:relative}
 .step+.step::before{content:'';position:absolute;left:0;top:15%;height:70%;width:1px;background:var(--line)}
@@ -178,6 +171,9 @@ textarea{resize:vertical;line-height:1.5}
 .share-big-btn:active{transform:scale(.98)}
 .share-hint{font-size:11.5px;color:var(--ink3);background:var(--paper2);border:1px solid var(--line);border-radius:var(--r);padding:8px 11px;line-height:1.6;margin-bottom:10px}
 .share-hint b{color:var(--ink2)}
+/* IDB status indicator */
+.idb-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--green-lt);color:var(--green-dk);font-weight:700;margin-left:6px;vertical-align:middle}
+.img-count-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:99px;background:var(--amber-lt);color:var(--amber);font-weight:700;border:1px solid rgba(139,90,0,.2)}
 </style>
 </head>
 <body>
@@ -186,7 +182,7 @@ textarea{resize:vertical;line-height:1.5}
 <div class="hdr">
   <div class="hdr-icon"><svg viewBox="0 0 18 18"><rect x="1" y="2" width="16" height="2" rx="1"/><rect x="1" y="6" width="11" height="2" rx="1"/><rect x="1" y="10" width="16" height="2" rx="1"/><rect x="1" y="14" width="8" height="2" rx="1"/></svg></div>
   <div>
-    <div class="hdr-name">Question Paper Maker</div>
+    <div class="hdr-name">Question Paper Maker <span class="idb-badge">💾 Images persist</span></div>
     <div class="hdr-sub">Text · MCQ · Match · Table · Image — PDF &amp; DOCX export</div>
   </div>
 </div>
@@ -194,7 +190,7 @@ textarea{resize:vertical;line-height:1.5}
 <!-- Auto-save bar -->
 <div class="save-bar">
   <div class="save-dot" id="saveDot"></div>
-  <div class="save-status" id="saveStatus">Auto-save ready</div>
+  <div class="save-status" id="saveStatus">Initialising storage…</div>
   <div class="save-btns">
     <button class="sb" onclick="APP.saveNow()" title="Save now">💾 Save now</button>
     <button class="sb primary" onclick="APP.saveAs()" title="Save as new slot">📌 Save as</button>
@@ -341,10 +337,91 @@ Answers must be written in the answer booklet provided.</textarea>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
+/* ═══════════════════════════════════════════════════════
+   IndexedDB helper — stores images separately so they
+   never hit the localStorage 5MB limit.
+   ═══════════════════════════════════════════════════════ */
+var IDB = (function(){
+  var DB_NAME = 'qpm_db';
+  var DB_VER  = 1;
+  var STORE   = 'images';
+  var db = null;
+
+  function open() {
+    return new Promise(function(resolve, reject) {
+      if (db) { resolve(db); return; }
+      var req = indexedDB.open(DB_NAME, DB_VER);
+      req.onupgradeneeded = function(e) {
+        e.target.result.createObjectStore(STORE); // key = imageId
+      };
+      req.onsuccess = function(e) { db = e.target.result; resolve(db); };
+      req.onerror   = function(e) { reject(e.target.error); };
+    });
+  }
+
+  function put(key, value) {
+    return open().then(function(d) {
+      return new Promise(function(resolve, reject) {
+        var tx = d.transaction(STORE, 'readwrite');
+        var req = tx.objectStore(STORE).put(value, key);
+        req.onsuccess = function() { resolve(); };
+        req.onerror   = function(e) { reject(e.target.error); };
+      });
+    });
+  }
+
+  function get(key) {
+    return open().then(function(d) {
+      return new Promise(function(resolve, reject) {
+        var tx = d.transaction(STORE, 'readonly');
+        var req = tx.objectStore(STORE).get(key);
+        req.onsuccess = function(e) { resolve(e.target.result || null); };
+        req.onerror   = function(e) { reject(e.target.error); };
+      });
+    });
+  }
+
+  function del(key) {
+    return open().then(function(d) {
+      return new Promise(function(resolve, reject) {
+        var tx = d.transaction(STORE, 'readwrite');
+        var req = tx.objectStore(STORE).delete(key);
+        req.onsuccess = function() { resolve(); };
+        req.onerror   = function(e) { reject(e.target.error); };
+      });
+    });
+  }
+
+  // Get all keys
+  function allKeys() {
+    return open().then(function(d) {
+      return new Promise(function(resolve, reject) {
+        var tx = d.transaction(STORE, 'readonly');
+        var req = tx.objectStore(STORE).getAllKeys();
+        req.onsuccess = function(e) { resolve(e.target.result || []); };
+        req.onerror   = function(e) { reject(e.target.error); };
+      });
+    });
+  }
+
+  // Delete all keys not in keepSet
+  function purgeExcept(keepSet) {
+    return allKeys().then(function(keys) {
+      var proms = keys.filter(function(k){ return !keepSet[k]; }).map(del);
+      return Promise.all(proms);
+    });
+  }
+
+  return { put: put, get: get, del: del, allKeys: allKeys, purgeExcept: purgeExcept };
+})();
+
+/* ═══════════════════════════════════════════════════════
+   Main APP
+   ═══════════════════════════════════════════════════════ */
 var APP = (function(){
   var secs = [], sid = 0, qid = 0;
-  var AUTOSAVE_KEY = 'qpm_autosave';
-  var SAVES_KEY    = 'qpm_saves';
+  var AUTOSAVE_KEY = 'qpm_autosave_v2';  // v2 = IDB-aware format
+  var SAVES_KEY    = 'qpm_saves_v2';
   var autoSaveTimer = null;
   var lastSavedHash = '';
   var isDirty = false;
@@ -357,16 +434,45 @@ var APP = (function(){
     setTimeout(function(){ t.classList.remove('show'); }, dur||2200);
   }
 
-  /* ── Save dot state ── */
+  /* ── Save dot ── */
   function setDot(state, txt) {
     var d = document.getElementById('saveDot');
     var s = document.getElementById('saveStatus');
     d.className = 'save-dot' + (state ? ' '+state : '');
-    if (txt) s.innerHTML = txt;
+    if (txt !== undefined) s.innerHTML = txt;
   }
 
-  /* ── Collect current state ── */
+  /* ── Escape helpers ── */
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  var e = esc;
+  function xl(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+  }
+
+  /* ══════════════════════════════════════════════════════
+     STATE: images are stored in IDB, referenced by imgKey.
+     secs[].qs[].imgKey = 'img_{qid}'  (stable per question)
+     secs[].qs[].imgData = null in saved state (loaded on demand from IDB)
+     imgCache = { imgKey: dataURL }   (in-memory cache)
+     ═══════════════════════════════════════════════════════ */
+  var imgCache = {}; // in-memory, keyed by imgKey e.g. 'img_5'
+
+  function imgKeyFor(q) { return 'img_' + q.id; }
+
+  /* Collect state to save (WITHOUT imgData — stored in IDB separately) */
   function collectState() {
+    var secsClean = JSON.parse(JSON.stringify(secs));
+    secsClean.forEach(function(sec){
+      sec.qs.forEach(function(q){
+        // Strip imgData from saved JSON; presence tracked by hasImg flag
+        if (q.type === 'image') {
+          q.hasImg = !!(imgCache[imgKeyFor(q)] || q.imgData);
+          q.imgData = ''; // never store base64 in localStorage
+        }
+      });
+    });
     return {
       school: document.getElementById('school').value,
       year:   document.getElementById('year').value,
@@ -379,52 +485,98 @@ var APP = (function(){
       setv:   document.getElementById('setv').value,
       edate:  document.getElementById('edate').value,
       insts:  document.getElementById('insts').value,
-      secs:   JSON.parse(JSON.stringify(secs)),
+      secs:   secsClean,
       sid: sid, qid: qid
     };
   }
 
-  /* ── Restore state ── */
-  function applyState(st) {
-    if (!st) return;
+  /* Apply state (images loaded from IDB after) */
+  function applyState(st, onDone) {
+    if (!st) { if (onDone) onDone(); return; }
     var fields = ['school','year','exam','subj','subjC','cls','marks','tmin','setv','edate','insts'];
-    fields.forEach(function(f){ var el=document.getElementById(f); if(el&&st[f]!==undefined) el.value=st[f]; });
-    document.getElementById('subjCW').style.display = (st.subj==='Other (type below)') ? '' : 'none';
+    fields.forEach(function(f){
+      var el = document.getElementById(f);
+      if (el && st[f] !== undefined) el.value = st[f];
+    });
+    document.getElementById('subjCW').style.display = (st.subj === 'Other (type below)') ? '' : 'none';
     secs = st.secs || [];
     sid  = st.sid  || 0;
     qid  = st.qid  || 0;
-    renderSecs();
+
+    // Load images from IDB into cache
+    var imgQs = [];
+    secs.forEach(function(sec){
+      sec.qs.forEach(function(q){
+        if (q.type === 'image' && q.hasImg) imgQs.push(q);
+      });
+    });
+
+    if (!imgQs.length) { renderSecs(); if (onDone) onDone(); return; }
+
+    var pending = imgQs.length;
+    imgQs.forEach(function(q){
+      var key = imgKeyFor(q);
+      IDB.get(key).then(function(data){
+        if (data) {
+          imgCache[key] = data;
+          q.imgData = data; // populate in-memory question object
+        }
+        pending--;
+        if (pending === 0) { renderSecs(); if (onDone) onDone(); }
+      }).catch(function(){
+        pending--;
+        if (pending === 0) { renderSecs(); if (onDone) onDone(); }
+      });
+    });
   }
 
-  /* ── Hash for change detection ── */
+  /* ── Hash ── */
   function stateHash(st) {
-    try { return JSON.stringify(st); } catch(e){ return ''; }
+    try {
+      // Exclude imgData from hash (it's in IDB)
+      var copy = JSON.parse(JSON.stringify(st));
+      (copy.secs || []).forEach(function(s){ s.qs.forEach(function(q){ q.imgData = ''; }); });
+      return JSON.stringify(copy);
+    } catch(e){ return ''; }
   }
 
-  /* ── Auto-save (every 30s) ── */
+  /* ── Auto-save ── */
   function startAutoSave() {
     if (autoSaveTimer) clearInterval(autoSaveTimer);
     autoSaveTimer = setInterval(function(){
       var st = collectState();
       var h  = stateHash(st);
-      if (h !== lastSavedHash) {
-        doAutoSave(st, h);
-      }
+      if (h !== lastSavedHash) doAutoSave(st, h);
     }, 30000);
   }
 
   function doAutoSave(st, h) {
     try {
-      setDot('saving','<b>Auto-saving…</b>');
-      var rec = { state: st, ts: Date.now() };
-      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(rec));
-      lastSavedHash = h || stateHash(st);
-      isDirty = false;
-      var d = new Date();
-      var t = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-      setDot('saved','Auto-saved at <b>'+t+'</b>');
-    } catch(e) {
-      setDot('','<span style="color:var(--red)">Auto-save failed (storage full?)</span>');
+      setDot('saving', '<b>Auto-saving…</b>');
+      // Save all current images to IDB
+      var imgSavePrms = [];
+      secs.forEach(function(sec){
+        sec.qs.forEach(function(q){
+          if (q.type === 'image') {
+            var key = imgKeyFor(q);
+            var data = imgCache[key] || q.imgData;
+            if (data) imgSavePrms.push(IDB.put(key, data));
+          }
+        });
+      });
+      Promise.all(imgSavePrms).then(function(){
+        var rec = { state: st, ts: Date.now() };
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(rec));
+        lastSavedHash = h || stateHash(st);
+        isDirty = false;
+        var d = new Date();
+        var t = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        setDot('saved', 'Auto-saved at <b>'+t+'</b>');
+      }).catch(function(err){
+        setDot('', '<span style="color:var(--red)">Auto-save error: '+err+'</span>');
+      });
+    } catch(err) {
+      setDot('', '<span style="color:var(--red)">Auto-save failed (storage full?)</span>');
     }
   }
 
@@ -443,16 +595,35 @@ var APP = (function(){
     var name = prompt('Name this save:', suggested);
     if (name === null) return;
     name = name.trim() || suggested;
-    try {
-      var saves = getSaves();
-      var id = 'save_' + Date.now();
-      saves.push({ id: id, name: name, ts: Date.now(), state: st });
-      localStorage.setItem(SAVES_KEY, JSON.stringify(saves));
-      updateSavesCount();
-      toast('📌 Saved as "' + name + '"');
-    } catch(e) {
-      alert('Could not save — browser storage may be full.');
-    }
+
+    // Save images to IDB first
+    var imgSavePrms = [];
+    var imgKeys = {}; // qId -> imgKey mapping for this save
+    secs.forEach(function(sec){
+      sec.qs.forEach(function(q){
+        if (q.type === 'image') {
+          var key = imgKeyFor(q);
+          var data = imgCache[key] || q.imgData;
+          if (data) {
+            imgKeys[q.id] = key;
+            imgSavePrms.push(IDB.put(key, data));
+          }
+        }
+      });
+    });
+
+    Promise.all(imgSavePrms).then(function(){
+      try {
+        var saves = getSaves();
+        var id = 'save_' + Date.now();
+        saves.push({ id: id, name: name, ts: Date.now(), state: st, imgKeys: imgKeys });
+        localStorage.setItem(SAVES_KEY, JSON.stringify(saves));
+        updateSavesCount();
+        toast('📌 Saved as "' + name + '"');
+      } catch(err) {
+        alert('Could not save — browser storage may be full. Try removing old saves.');
+      }
+    });
   }
 
   function getSaves() {
@@ -485,9 +656,11 @@ var APP = (function(){
       var d = new Date(s.ts);
       var dt = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
       var sc = (s.state && s.state.secs) ? s.state.secs.reduce(function(a,sec){return a+sec.qs.length;},0) : 0;
+      var imgCount = Object.keys(s.imgKeys || {}).length;
+      var imgBadge = imgCount > 0 ? ' <span class="img-count-badge">📷 '+imgCount+' img</span>' : '';
       return '<div class="save-item">' +
         '<div class="save-item-info">' +
-          '<div class="save-item-name">'+esc(s.name)+'</div>' +
+          '<div class="save-item-name">'+esc(s.name)+imgBadge+'</div>' +
           '<div class="save-item-meta">'+dt+' &nbsp;·&nbsp; '+sc+' question'+(sc!==1?'s':'')+'</div>' +
         '</div>' +
         '<div class="save-item-btns">' +
@@ -504,15 +677,26 @@ var APP = (function(){
     for (var i=0;i<saves.length;i++) if(saves[i].id===id){found=saves[i];break;}
     if (!found) return;
     if (!confirm('Load "'+found.name+'"? Your current unsaved work will be replaced.')) return;
-    applyState(found.state);
     closeSaves();
-    lastSavedHash = stateHash(collectState());
-    setDot('saved','Loaded: <b>'+esc(found.name)+'</b>');
-    toast('✓ Loaded "'+found.name+'"');
+    setDot('saving', 'Loading…');
+
+    // Clear current image cache
+    imgCache = {};
+
+    applyState(found.state, function(){
+      lastSavedHash = stateHash(collectState());
+      setDot('saved', 'Loaded: <b>'+esc(found.name)+'</b>');
+      toast('✓ Loaded "'+found.name+'"');
+      renderSecs();
+    });
   }
 
   function deleteSave(id) {
-    var saves = getSaves().filter(function(s){return s.id!==id;});
+    var saves = getSaves();
+    var target = null;
+    for (var i=0;i<saves.length;i++) if(saves[i].id===id){target=saves[i];break;}
+    // We keep IDB images since the auto-save may still reference them
+    saves = saves.filter(function(s){return s.id!==id;});
     localStorage.setItem(SAVES_KEY, JSON.stringify(saves));
     updateSavesCount();
     renderSavesList();
@@ -520,30 +704,40 @@ var APP = (function(){
   }
 
   /* ── Restore autosave on startup ── */
-  function tryRestoreAutosave() {
+  function tryRestoreAutosave(onDone) {
     try {
       var raw = localStorage.getItem(AUTOSAVE_KEY);
-      if (!raw) return false;
+      if (!raw) { if (onDone) onDone(false); return; }
       var rec = JSON.parse(raw);
-      if (!rec || !rec.state) return false;
+      if (!rec || !rec.state) { if (onDone) onDone(false); return; }
       var d = new Date(rec.ts);
       var dt = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
       var sc = (rec.state.secs||[]).reduce(function(a,s){return a+s.qs.length;},0);
-      if (confirm('Restore your last auto-saved work?\n\nSaved: '+dt+'\nQuestions: '+sc+'\n\nTap OK to restore, Cancel to start fresh.')) {
-        applyState(rec.state);
-        lastSavedHash = stateHash(collectState());
-        setDot('saved','Restored auto-save from <b>'+dt+'</b>');
-        return true;
+      var imgCount = (rec.state.secs||[]).reduce(function(a,s){
+        return a + s.qs.filter(function(q){return q.type==='image'&&q.hasImg;}).length;
+      }, 0);
+      var msg = 'Restore your last auto-saved work?\n\nSaved: '+dt+'\nQuestions: '+sc+(imgCount?' · '+imgCount+' image(s)':'')+'\n\nTap OK to restore, Cancel to start fresh.';
+      if (confirm(msg)) {
+        imgCache = {};
+        applyState(rec.state, function(){
+          lastSavedHash = stateHash(collectState());
+          setDot('saved', 'Restored auto-save from <b>'+dt+'</b>');
+          if (onDone) onDone(true);
+        });
+      } else {
+        if (onDone) onDone(false);
       }
-    } catch(e){}
-    return false;
+    } catch(err) {
+      console.warn('Restore error:', err);
+      if (onDone) onDone(false);
+    }
   }
 
-  /* ── Mark dirty on any interaction ── */
+  /* ── Mark dirty ── */
   function markDirty() {
     if (!isDirty) {
       isDirty = true;
-      setDot('','Unsaved changes');
+      setDot('', 'Unsaved changes');
     }
   }
 
@@ -573,7 +767,6 @@ var APP = (function(){
     if (btn) goStep(parseInt(btn.getAttribute('data-step')));
   });
 
-  // Mark dirty on any input change
   document.querySelector('.wrap').addEventListener('input', markDirty);
   document.querySelector('.wrap').addEventListener('change', markDirty);
 
@@ -589,19 +782,16 @@ var APP = (function(){
 
   function checkImgNote() {
     var hasImg = false;
-    secs.forEach(function(s){ s.qs.forEach(function(q){ if(q.type==='image'&&q.imgData) hasImg=true; }); });
+    secs.forEach(function(s){
+      s.qs.forEach(function(q){
+        if (q.type==='image' && (imgCache[imgKeyFor(q)] || q.imgData)) hasImg=true;
+      });
+    });
     var note = document.getElementById('imgNote');
     if (note) note.style.display = hasImg ? 'block' : 'none';
   }
 
-  function esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function e(s) { return esc(s); }
-  function xmlEsc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
-  }
-
+  /* ── Section / Question data ops ── */
   function addSec() {
     var n = secs.length + 1;
     var roman = ['I','II','III','IV','V','VI','VII','VIII'][n-1] || n;
@@ -620,7 +810,6 @@ var APP = (function(){
     for (var i = 0; i < secs.length; i++) if (secs[i].id === id) return secs[i];
     return null;
   }
-
   function makeQ(type) {
     qid++;
     var base = {id: qid, type: type};
@@ -628,14 +817,23 @@ var APP = (function(){
     if (type==='mcq')   return Object.assign(base,{text:'',opts:['','','',''],correct:'',marks:''});
     if (type==='match') return Object.assign(base,{text:'Match the following.',pairs:[{l:'',r:''}],marks:''});
     if (type==='table') return Object.assign(base,{text:'Study the table and answer.',rows:2,cols:3,headers:['Column A','Column B','Column C'],data:[['','',''],['','','']],marks:''});
-    if (type==='image') return Object.assign(base,{text:'',imgData:'',imgType:'image/png',caption:'',marks:''});
+    if (type==='image') return Object.assign(base,{text:'',imgData:'',imgType:'image/png',caption:'',marks:'',hasImg:false});
     return base;
   }
   function addQ(sid2, type) {
     var s = findSec(sid2); if (s) { s.qs.push(makeQ(type)); renderSecs(); markDirty(); }
   }
   function removeQ(sid2, qi) {
-    var s = findSec(sid2); if (s) { s.qs.splice(qi,1); renderSecs(); markDirty(); }
+    var s = findSec(sid2);
+    if (s) {
+      var q = s.qs[qi];
+      if (q && q.type === 'image') {
+        var key = imgKeyFor(q);
+        delete imgCache[key];
+        IDB.del(key).catch(function(){});
+      }
+      s.qs.splice(qi,1); renderSecs(); markDirty();
+    }
   }
   function updQF(sid2, qi, field, val) {
     var s = findSec(sid2); if (s && s.qs[qi]) { s.qs[qi][field] = val; markDirty(); }
@@ -675,17 +873,42 @@ var APP = (function(){
   function updTblC(sid2, qi, ri, ci, val) {
     var s = findSec(sid2); if(s&&s.qs[qi]){s.qs[qi].data[ri][ci]=val;markDirty();}
   }
+
+  /* ── Image handling: save to IDB + cache ── */
   function handleImg(sid2, qi, input) {
     if (!input.files||!input.files[0]) return;
-    var f = input.files[0]; var imgType = f.type||'image/png';
+    var f = input.files[0];
+    var imgType = f.type||'image/png';
     var reader = new FileReader();
     reader.onload = function(ev) {
+      var data = ev.target.result;
       var s = findSec(sid2);
-      if (s && s.qs[qi]) { s.qs[qi].imgData = ev.target.result; s.qs[qi].imgType = imgType; renderSecs(); markDirty(); }
+      if (!s || !s.qs[qi]) return;
+      var q = s.qs[qi];
+      var key = imgKeyFor(q);
+      // Store in cache and IDB
+      imgCache[key] = data;
+      q.imgData   = data;
+      q.imgType   = imgType;
+      q.hasImg    = true;
+      IDB.put(key, data).then(function(){
+        toast('📷 Image saved to storage');
+      }).catch(function(err){
+        toast('⚠ Image stored in session only');
+        console.warn('IDB put failed:', err);
+      });
+      renderSecs();
+      markDirty();
     };
     reader.readAsDataURL(f);
   }
 
+  /* Helper: get image data for a question */
+  function getImgData(q) {
+    return imgCache[imgKeyFor(q)] || q.imgData || '';
+  }
+
+  /* ── Type info ── */
   function typeInfo(t) {
     var m = {
       text:  {lbl:'Short/Long Answer',cls:'tag-text'},
@@ -697,6 +920,7 @@ var APP = (function(){
     return m[t]||{lbl:t,cls:'tag-text'};
   }
 
+  /* ── Render sections ── */
   function renderSecs() {
     var c = document.getElementById('secsContainer');
     c.innerHTML = '';
@@ -793,16 +1017,19 @@ var APP = (function(){
           '<input type="number" value="'+e(q.marks)+'" min="0" style="width:70px" onchange="APP.updQF('+sid2+','+qi+',\'marks\',this.value)"></div>' +
         '</div>';
     } else if (q.type==='image') {
-      var imgPrev = q.imgData ? '<div class="img-preview"><img src="'+q.imgData+'" alt="question image"></div>' : '';
-      var uploadLabel = q.imgData ? '📷 Image uploaded — tap to replace' : '📷 Tap to upload image';
+      var imgData = getImgData(q);
+      var imgPrev = imgData ? '<div class="img-preview"><img src="'+imgData+'" alt="question image"></div>' : '';
+      var uploadLabel = imgData ? '📷 Image uploaded — tap to replace' : '📷 Tap to upload image';
+      var storedNote = imgData
+        ? '<div style="font-size:11px;color:var(--green-dk);margin-top:4px;display:flex;align-items:center;gap:5px">✓ Image saved in browser storage <span style="color:var(--ink3)">(persists across sessions)</span></div>'
+        : '<div style="font-size:11px;color:var(--ink3);margin-top:4px">No image yet — upload one below.</div>';
       body = '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
         '<textarea rows="2" placeholder="Question referring to the image…" onchange="APP.updQF('+sid2+','+qi+',\'text\',this.value)">'+e(q.text)+'</textarea></div>' +
         '<div class="img-upload-area"><input type="file" accept="image/*" onchange="APP.handleImg('+sid2+','+qi+',this)">' +
           '<div style="font-size:13px;color:var(--ink3)">'+uploadLabel+'</div>' +
-          '<div style="font-size:11px;color:var(--ink3);margin-top:3px">JPG, PNG, GIF — embedded in DOCX &amp; PDF</div>' +
+          '<div style="font-size:11px;color:var(--ink3);margin-top:3px">JPG, PNG, GIF — stored persistently · embedded in DOCX &amp; PDF</div>' +
         '</div>' +
-        imgPrev +
-        (q.imgData?'<div style="font-size:11px;color:var(--green-dk);margin-top:4px">✓ Image stored</div>':'') +
+        imgPrev + storedNote +
         '<div style="margin-top:6px"><input type="text" value="'+e(q.caption)+'" placeholder="Image caption (optional)" onchange="APP.updQF('+sid2+','+qi+',\'caption\',this.value)"></div>' +
         '<div style="display:flex;align-items:center;gap:6px;margin-top:8px"><label class="lbl" style="margin:0">Marks</label>' +
         '<input type="number" value="'+e(q.marks)+'" min="0" style="width:70px" onchange="APP.updQF('+sid2+','+qi+',\'marks\',this.value)"></div>';
@@ -816,6 +1043,7 @@ var APP = (function(){
       '</div><div class="q-body">'+body+'</div></div>';
   }
 
+  /* ── Preview ── */
   function renderPrev() {
     var school=document.getElementById('school').value, exam=document.getElementById('exam').value;
     var subj=getSubj(), cls=document.getElementById('cls').value;
@@ -851,6 +1079,7 @@ var APP = (function(){
   }
 
   function renderQPreview(q,num) {
+    var img = getImgData(q);
     if(q.type==='text') return '<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[empty]</span>')+'</div>';
     if(q.type==='mcq'){
       var h='<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[MCQ]</span>')+'</div>';
@@ -871,7 +1100,7 @@ var APP = (function(){
     }
     if(q.type==='image'){
       var h='<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[Image question]</span>')+'</div>';
-      if(q.imgData) h+='<img class="q-img" src="'+q.imgData+'" alt="question image">';
+      if(img) h+='<img class="q-img" src="'+img+'" alt="question image">';
       if(q.caption) h+='<div class="q-img-cap">'+e(q.caption)+'</div>';
       return h;
     }
@@ -906,6 +1135,7 @@ var APP = (function(){
     document.getElementById('prevRaw').style.display=mode==='raw'?'':'none';
   }
 
+  /* ── PDF ── */
   function dlPDF() {
     var win=window.open('','_blank');
     if(!win){alert('Please allow pop-ups.');return;}
@@ -938,14 +1168,16 @@ var APP = (function(){
     return h;
   }
   function renderQForPDF(q,num) {
+    var img = getImgData(q);
     if(q.type==='text') return '<div class="q">'+num+'. '+e(q.text||'')+'</div>';
     if(q.type==='mcq'){var h='<div class="q">'+num+'. '+e(q.text||'')+'</div>';q.opts.forEach(function(o,i){if(o.trim())h+='<div class="mcq-opt">'+String.fromCharCode(65+i)+'. '+e(o)+'</div>';});return h;}
     if(q.type==='match'){var h='<div class="q">'+num+'. '+e(q.text)+'</div><table class="match-tbl"><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>';q.pairs.forEach(function(p){h+='<tr><td>'+(e(p.l)||'&nbsp;')+'</td><td>'+(e(p.r)||'&nbsp;')+'</td></tr>';});return h+'</tbody></table>';}
     if(q.type==='table'){var h='<div class="q">'+num+'. '+e(q.text)+'</div><table class="data-tbl"><thead><tr>'+q.headers.map(function(hd){return '<th>'+e(hd)+'</th>';}).join('')+'</tr></thead><tbody>';q.data.forEach(function(row){h+='<tr>'+row.map(function(cell){return '<td>'+(e(cell)||'&nbsp;')+'</td>';}).join('')+'</tr>';});return h+'</tbody></table>';}
-    if(q.type==='image'){var h='<div class="q">'+num+'. '+e(q.text||'')+'</div>';if(q.imgData)h+='<img class="q-img" src="'+q.imgData+'" alt="'+(q.caption?e(q.caption):'image')+'">';else h+='<div class="q" style="color:#888;font-style:italic">[No image]</div>';if(q.caption)h+='<div class="q-img-cap">'+e(q.caption)+'</div>';return h;}
+    if(q.type==='image'){var h='<div class="q">'+num+'. '+e(q.text||'')+'</div>';if(img)h+='<img class="q-img" src="'+img+'" alt="'+(q.caption?e(q.caption):'image')+'">';else h+='<div class="q" style="color:#888;font-style:italic">[No image]</div>';if(q.caption)h+='<div class="q-img-cap">'+e(q.caption)+'</div>';return h;}
     return '';
   }
 
+  /* ── DOCX builder ── */
   function buildDocxBlob() {
     return new Promise(function(resolve,reject){
       if(typeof JSZip==='undefined'){reject(new Error('JSZip not loaded'));return;}
@@ -957,13 +1189,17 @@ var APP = (function(){
       var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
       var imgList=[],imgRidMap={},rIdCounter=2,drawIdCounter=1;
       secs.forEach(function(sec){sec.qs.forEach(function(q){
-        if(q.type==='image'&&q.imgData){
-          var rId='rId'+rIdCounter++;var ext=(q.imgType||'image/png').split('/')[1]||'png';if(ext==='jpeg')ext='jpg';
-          imgList.push({rId:rId,ext:ext,mimeType:q.imgType||'image/png',base64:q.imgData.split(',')[1],fname:'img'+imgList.length+'.'+ext});
-          imgRidMap[q.id]=rId;
+        if(q.type==='image'){
+          var data = getImgData(q);
+          if(data){
+            var rId='rId'+rIdCounter++;
+            var ext=(q.imgType||'image/png').split('/')[1]||'png';if(ext==='jpeg')ext='jpg';
+            var b64 = data.split(',')[1];
+            imgList.push({rId:rId,ext:ext,mimeType:q.imgType||'image/png',base64:b64,fname:'img'+imgList.length+'.'+ext});
+            imgRidMap[q.id]=rId;
+          }
         }
       });});
-      function xl(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');}
       var docBody='';
       docBody+='<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="32"/></w:rPr><w:t>'+xl(school)+'</w:t></w:r></w:p>';
       docBody+='<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="26"/></w:rPr><w:t>'+xl(exam+' — '+year)+'</w:t></w:r></w:p>';
@@ -983,6 +1219,7 @@ var APP = (function(){
         if(sec.inst) docBody+='<w:p><w:pPr><w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:i/><w:sz w:val="20"/><w:color w:val="666666"/></w:rPr><w:t>('+xl(sec.inst)+')</w:t></w:r></w:p>';
         sec.qs.forEach(function(q){
           var qnum=gn++;
+          var imgdata = getImgData(q);
           if(q.type==='text'){docBody+='<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xl(q.text||'')+'</w:t></w:r></w:p>';}
           else if(q.type==='mcq'){
             docBody+='<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xl(q.text||'')+'</w:t></w:r></w:p>';
@@ -1002,7 +1239,7 @@ var APP = (function(){
             docBody+='</w:tbl><w:p><w:pPr><w:spacing w:after="80"/></w:pPr></w:p>';
           }else if(q.type==='image'){
             docBody+='<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr><w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xl(q.text||'')+'</w:t></w:r></w:p>';
-            if(q.imgData&&imgRidMap[q.id]){
+            if(imgdata&&imgRidMap[q.id]){
               var rId=imgRidMap[q.id],imgDrawId=drawIdCounter++,cx=4320000,cy=3240000;
               docBody+='<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:noProof/></w:rPr><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="'+imgDrawId+'" name="Picture '+imgDrawId+'" descr="'+(q.caption?xl(q.caption):'image')+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="'+imgDrawId+'" name="Picture '+imgDrawId+'"/><pic:cNvPicPr><a:picLocks noChangeAspect="1" noChangeArrowheads="1"/></pic:cNvPicPr></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rId+'"/><a:srcRect/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr bwMode="auto"><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
               if(q.caption) docBody+='<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr><w:r><w:rPr><w:i/><w:sz w:val="18"/><w:color w:val="666666"/></w:rPr><w:t>'+xl(q.caption)+'</w:t></w:r></w:p>';
@@ -1046,7 +1283,7 @@ var APP = (function(){
 
   function dlDocx() {
     buildDocxBlob().then(function(blob){triggerDownload(blob,buildDocxFilename()+'.docx');})
-      .catch(function(err){alert('Error: '+err.message);});
+      .catch(function(err){alert('Error building DOCX: '+err.message);});
   }
 
   function shareDocx() {
@@ -1068,20 +1305,27 @@ var APP = (function(){
     });
   }
 
+  /* ── Clear all ── */
   function clearAll() {
-    if(!confirm('Clear all work and reset? This also clears the auto-save.')) return;
+    if(!confirm('Clear all work and reset? This also clears the auto-save and stored images.')) return;
     document.getElementById('school').value='';
     document.getElementById('insts').value='';
     ['year','exam','subj','cls','setv'].forEach(function(f){ var el=document.getElementById(f); if(el) el.selectedIndex=0; });
     ['marks','tmin','edate','subjC'].forEach(function(f){ var el=document.getElementById(f); if(el) el.value=''; });
     document.getElementById('subjCW').style.display='none';
+    // Remove all IDB images for current paper
+    IDB.allKeys().then(function(keys){
+      keys.forEach(function(k){ IDB.del(k).catch(function(){}); });
+    });
+    imgCache={};
     secs=[];sid=0;qid=0;renderSecs();
-    try{ localStorage.removeItem(AUTOSAVE_KEY); }catch(e){}
+    try{ localStorage.removeItem(AUTOSAVE_KEY); }catch(err){}
     lastSavedHash='';isDirty=false;
     setDot('','Cleared — start fresh');
     toast('🗑 All cleared');
   }
 
+  /* ── Load sample ── */
   function loadSample() {
     document.getElementById('school').value='Nusrath Secondary School';
     document.getElementById('year').value='2025-26';
@@ -1094,7 +1338,7 @@ var APP = (function(){
     document.getElementById('edate').value='15 June 2026';
     document.getElementById('insts').value='All questions are compulsory.\nWrite your name, class, and roll number clearly on the answer sheet.\nUse blue or black ink pen only.\nRead each question carefully before answering.';
     document.getElementById('subjCW').style.display='none';
-    secs=[];sid=0;qid=0;
+    imgCache={};secs=[];sid=0;qid=0;
     function ns(name,each,total,inst){sid++;return{id:sid,name:name,each:each,total:total,inst:inst,qs:[]};}
     function nq(type,data){qid++;return Object.assign({id:qid,type:type},data);}
     var s1=ns('I. Multiple Choice Questions','1','5','Choose the correct answer.');
@@ -1115,13 +1359,25 @@ var APP = (function(){
   /* ── Init ── */
   function init() {
     updateSavesCount();
-    var restored = tryRestoreAutosave();
-    if (!restored) {
-      loadSample();
-    }
-    startAutoSave();
-    lastSavedHash = stateHash(collectState());
-    setDot('saved', 'Auto-save active — saves every 30 sec');
+    setDot('saving', 'Opening storage…');
+    // Ensure IDB is open before anything else
+    IDB.allKeys().then(function(keys){
+      setDot('', 'Storage ready');
+      tryRestoreAutosave(function(restored){
+        if (!restored) loadSample();
+        startAutoSave();
+        lastSavedHash = stateHash(collectState());
+        setDot('saved', 'Auto-save active — saves every 30 sec');
+      });
+    }).catch(function(err){
+      console.warn('IDB open failed:', err);
+      setDot('', '<span style="color:var(--amber)">⚠ Storage limited — images may not persist</span>');
+      tryRestoreAutosave(function(restored){
+        if (!restored) loadSample();
+        startAutoSave();
+        lastSavedHash = stateHash(collectState());
+      });
+    });
   }
 
   init();
