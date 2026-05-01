@@ -847,6 +847,7 @@ var APP = (function(){
     var imgList = []; // {rId, ext, mimeType, base64data}
     var imgRidMap = {}; // qid -> rId
     var rIdCounter = 2; // rId1 = styles
+    var drawIdCounter = 1; // unique drawing element id per image
 
     secs.forEach(function(sec){
       sec.qs.forEach(function(q){
@@ -1003,31 +1004,44 @@ var APP = (function(){
             '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text||'')+'</w:t></w:r></w:p>';
           if (q.imgData && imgRidMap[q.id]) {
             var rId = imgRidMap[q.id];
-            // 3cm x 4cm default size in EMU (1cm = 914400/2.54 EMU ≈ 360000)
-            var cx = 4572000; // ~5cm wide
-            var cy = 3429000; // ~3.75cm tall
-            docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/></w:pPr><w:r>' +
-              '<w:rPr><w:noProof/></w:rPr>' +
-              '<w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">' +
-                '<wp:extent cx="'+cx+'" cy="'+cy+'"/>' +
-                '<wp:effectExtent l="0" t="0" r="0" b="0"/>' +
-                '<wp:docPr id="1" name="Image"/>' +
-                '<wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr>' +
-                '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">' +
-                  '<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
-                    '<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
-                      '<pic:nvPicPr><pic:cNvPr id="0" name="Image"/><pic:cNvPicPr/></pic:nvPicPr>' +
-                      '<pic:blipFill>' +
-                        '<a:blip r:embed="'+rId+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>' +
-                        '<a:stretch><a:fillRect/></a:stretch>' +
-                      '</pic:blipFill>' +
-                      '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm>' +
-                        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>' +
-                      '</pic:spPr>' +
-                    '</pic:pic>' +
-                  '</a:graphicData>' +
-                '</a:graphic>' +
-              '</wp:inline></w:drawing></w:r></w:p>';
+            var imgDrawId = drawIdCounter++;
+            // EMU: 1 inch = 914400, 1 cm = 360000
+            // 12cm wide x 9cm tall — fits within A4 margins
+            var cx = 4320000; // ~4.7 inches / ~12cm
+            var cy = 3240000; // ~3.5 inches / ~9cm
+            docBody +=
+              '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/><w:jc w:val="left"/></w:pPr>' +
+              '<w:r><w:rPr><w:noProof/></w:rPr>' +
+              '<w:drawing>' +
+                '<wp:inline distT="0" distB="0" distL="0" distR="0">' +
+                  '<wp:extent cx="'+cx+'" cy="'+cy+'"/>' +
+                  '<wp:effectExtent l="0" t="0" r="0" b="0"/>' +
+                  '<wp:docPr id="'+imgDrawId+'" name="Picture '+imgDrawId+'" descr="'+(q.caption?xmlEsc(q.caption):'image')+'"/>' +
+                  '<wp:cNvGraphicFramePr>' +
+                    '<a:graphicFrameLocks noChangeAspect="1"/>' +
+                  '</wp:cNvGraphicFramePr>' +
+                  '<a:graphic>' +
+                    '<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
+                      '<pic:pic>' +
+                        '<pic:nvPicPr>' +
+                          '<pic:cNvPr id="'+imgDrawId+'" name="Picture '+imgDrawId+'"/>' +
+                          '<pic:cNvPicPr><a:picLocks noChangeAspect="1" noChangeArrowheads="1"/></pic:cNvPicPr>' +
+                        '</pic:nvPicPr>' +
+                        '<pic:blipFill>' +
+                          '<a:blip r:embed="'+rId+'"/>' +
+                          '<a:srcRect/>' +
+                          '<a:stretch><a:fillRect/></a:stretch>' +
+                        '</pic:blipFill>' +
+                        '<pic:spPr bwMode="auto">' +
+                          '<a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm>' +
+                          '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>' +
+                          '<a:noFill/>' +
+                        '</pic:spPr>' +
+                      '</pic:pic>' +
+                    '</a:graphicData>' +
+                  '</a:graphic>' +
+                '</wp:inline>' +
+              '</w:drawing></w:r></w:p>';
             if (q.caption) {
               docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr>' +
                 '<w:r><w:rPr><w:i/><w:sz w:val="18"/><w:color w:val="666666"/></w:rPr><w:t>'+xmlEsc(q.caption)+'</w:t></w:r></w:p>';
@@ -1041,39 +1055,33 @@ var APP = (function(){
       });
     });
 
+    // sectPr MUST be the last element in <w:body>
+    var sectPr = '<w:sectPr>' +
+      '<w:pgSz w:w="11906" w:h="16838"/>' +   // A4 in twips
+      '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/>' +  // ~2cm margins
+      '</w:sectPr>';
+
     var documentXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-      '<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"' +
-        ' xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"' +
+      '<w:document' +
+        ' xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"' +
         ' xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"' +
-        ' xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"' +
-        ' xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"' +
         ' xmlns:o="urn:schemas-microsoft-com:office:office"' +
-        ' xmlns:oel="http://schemas.microsoft.com/office/2019/extlst"' +
         ' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"' +
         ' xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"' +
         ' xmlns:v="urn:schemas-microsoft-com:vml"' +
-        ' xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"' +
         ' xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"' +
         ' xmlns:w10="urn:schemas-microsoft-com:office:word"' +
         ' xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"' +
         ' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"' +
         ' xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"' +
-        ' xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"' +
-        ' xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"' +
-        ' xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"' +
-        ' xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"' +
-        ' xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"' +
-        ' xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"' +
-        ' xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"' +
         ' xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"' +
         ' xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"' +
-        ' mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">' +
+        ' xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"' +
+        ' xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"' +
+        ' mc:Ignorable="w14 w15">' +
       '<w:body>' +
-        '<w:sectPr>' +
-          '<w:pgSz w:w="11906" w:h="16838"/>'+  // A4 in twips
-          '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/>'+  // ~2cm margins
-        '</w:sectPr>' +
       docBody +
+      sectPr +
       '</w:body></w:document>';
 
     // Relationships for document
@@ -1081,7 +1089,7 @@ var APP = (function(){
       '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
     imgList.forEach(function(img){
-      relsXml += '<Relationship Id="'+img.rId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/'+img.fname+'"/>';
+      relsXml += '<Relationship Id="'+img.rId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+img.fname+'"/>';
     });
     relsXml += '</Relationships>';
 
@@ -1100,7 +1108,12 @@ var APP = (function(){
         '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
         '<Default Extension="xml" ContentType="application/xml"/>';
     var imgExts = {};
-    imgList.forEach(function(img){ imgExts[img.ext] = img.mimeType; });
+    imgList.forEach(function(img){
+      // Always map the actual file extension to the correct MIME type
+      var mime = img.mimeType;
+      if (img.ext === 'jpg') mime = 'image/jpeg';
+      imgExts[img.ext] = mime;
+    });
     Object.keys(imgExts).forEach(function(ext){
       ctXml += '<Default Extension="'+ext+'" ContentType="'+imgExts[ext]+'"/>';
     });
