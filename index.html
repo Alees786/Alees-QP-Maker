@@ -537,7 +537,7 @@ var APP=(function(){
     var set=document.getElementById('setv').value,year=document.getElementById('year').value;
     var date=document.getElementById('edate').value;
     var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
-    var h='<div class="sch">'+e(school)+'</div><div class="ex">'+e(exam)+' — '+e(year)+'</div><div class="ex">'+e(subj)+'</div><hr><div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span><span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' min</span>'+(date?'<span><b>Date:</b> '+e(date)+'</span>':'')+'</div><div class="nml"><b>Name:</b> _______________________________ &ensp;<b>Div:</b> _______ &ensp;<b>Roll No:</b> _______</div><hr>';
+    var h='<div class="sch">'+e(school)+'</div><div class="ex">'+e(exam)+' — '+e(year)+'</div><div class="ex">'+e(subj)+'</div><hr><div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span><span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' min</span>'+(date?'<span><b>Date:</b> '+e(date)+'</span>':'')+'</div><div class="nml"><b>Name:</b> ___________________________________________ &ensp;<b>Div:</b> _______ &ensp;<b>Roll No:</b> _______</div><hr>';
     if(ins.length)h+='<div class="ins"><b>Instructions:</b><ol>'+ins.map(function(l){return'<li>'+e(l)+'</li>';}).join('')+'</ol></div>';
     var gn=1;
     secs.forEach(function(sec){h+='<div class="sec-t">'+e(sec.name)+' <span style="font-weight:normal;font-size:10px">('+e(sec.each)+' × '+sec.qs.length+' = '+e(sec.total)+' marks)</span></div>';if(sec.inst)h+='<div class="sec-i">('+e(sec.inst)+')</div>';sec.qs.forEach(function(q){h+=renderQPreview(q,gn++);});});
