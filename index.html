@@ -33,6 +33,57 @@ body{font-family:var(--ui);background:var(--paper2);color:var(--ink);font-size:1
 .hdr-icon svg{width:16px;height:16px;fill:#fff}
 .hdr-name{font-size:14px;font-weight:700;color:var(--ink)}
 .hdr-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+
+/* ── TYPING CREDIT BANNER ── */
+.dev-credit{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;padding:7px 14px;
+  background:linear-gradient(135deg,var(--green-lt),var(--paper));
+  border:1px solid rgba(15,110,86,.22);
+  border-radius:var(--r);margin-bottom:8px;
+  font-size:12px;font-weight:600;color:var(--ink2);
+  min-height:34px;overflow:hidden;
+}
+.dev-credit .credit-prefix{
+  color:var(--green);font-size:13px;white-space:nowrap;
+}
+.dev-credit .credit-text{
+  font-family:var(--mono);font-size:12.5px;
+  color:var(--ink);letter-spacing:.03em;
+  min-width:0;
+}
+.dev-credit .cursor{
+  display:inline-block;width:2px;height:14px;
+  background:var(--green);border-radius:1px;
+  margin-left:1px;vertical-align:middle;
+  animation:blink .65s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.dev-credit .emoji-spin{
+  display:inline-block;
+  animation:spinBounce 2.5s ease-in-out infinite;
+  font-size:14px;
+}
+@keyframes spinBounce{
+  0%{transform:rotate(0deg) scale(1)}
+  25%{transform:rotate(15deg) scale(1.15)}
+  50%{transform:rotate(-10deg) scale(1)}
+  75%{transform:rotate(8deg) scale(1.08)}
+  100%{transform:rotate(0deg) scale(1)}
+}
+.dev-credit .emoji-pulse{
+  display:inline-block;
+  animation:heartbeat 1.4s ease-in-out infinite;
+  font-size:14px;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1)}
+  14%{transform:scale(1.25)}
+  28%{transform:scale(1)}
+  42%{transform:scale(1.2)}
+  56%{transform:scale(1)}
+}
+
 .save-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;flex-wrap:wrap}
 .save-dot{width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;transition:background .3s}
 .save-dot.saved{background:#22c55e}
@@ -208,6 +259,15 @@ textarea{resize:vertical;line-height:1.5}
     <div class="hdr-name">Alees Question Paper Maker😎 </div>
     <div class="hdr-sub">Text · MCQ · Match · Table · Image — PDF &amp; DOCX export</div>
   </div>
+</div>
+
+<!-- ── ANIMATED CREDIT BANNER ── -->
+<div class="dev-credit">
+  <span class="emoji-spin">✨</span>
+  <span class="credit-prefix">👨‍💻</span>
+  <span class="credit-text" id="creditText"></span><span class="cursor" id="creditCursor"></span>
+  <span class="emoji-pulse">💚</span>
+  <span class="emoji-spin">✨</span>
 </div>
 
 <!-- Auto-save bar -->
@@ -399,6 +459,46 @@ Answers must be written in the answer booklet provided.</textarea>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
+   TYPING CREDIT ANIMATION
+   ═══════════════════════════════════════════════════════ */
+(function(){
+  var phrases = [
+    'Developed by AliAkbar Pallath 🚀',
+    'Crafted with ❤️ by AliAkbar Pallath',
+    'AliAkbar Pallath — Making teachers\' life easier! 🎯',
+    'Built by AliAkbar Pallath ✨'
+  ];
+  var el = document.getElementById('creditText');
+  var pi = 0, ci = 0, deleting = false;
+  var TYPE_SPEED = 60, DELETE_SPEED = 35, PAUSE_AFTER = 2200, PAUSE_BEFORE = 400;
+
+  function tick(){
+    var phrase = phrases[pi];
+    if(!deleting){
+      el.textContent = phrase.slice(0, ci+1);
+      ci++;
+      if(ci === phrase.length){
+        deleting = true;
+        setTimeout(tick, PAUSE_AFTER);
+        return;
+      }
+      setTimeout(tick, TYPE_SPEED);
+    } else {
+      el.textContent = phrase.slice(0, ci-1);
+      ci--;
+      if(ci === 0){
+        deleting = false;
+        pi = (pi + 1) % phrases.length;
+        setTimeout(tick, PAUSE_BEFORE);
+        return;
+      }
+      setTimeout(tick, DELETE_SPEED);
+    }
+  }
+  setTimeout(tick, 600);
+})();
+
+/* ═══════════════════════════════════════════════════════
    IndexedDB helper
    ═══════════════════════════════════════════════════════ */
 var IDB = (function(){
@@ -537,7 +637,7 @@ var APP=(function(){
     var set=document.getElementById('setv').value,year=document.getElementById('year').value;
     var date=document.getElementById('edate').value;
     var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
-    var h='<div class="sch">'+e(school)+'</div><div class="ex">'+e(exam)+' — '+e(year)+'</div><div class="ex">'+e(subj)+'</div><hr><div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span><span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' min</span>'+(date?'<span><b>Date:</b> '+e(date)+'</span>':'')+'</div><div class="nml"><b>Name:</b> ________________________________________________________ &ensp;<b>Div:</b> _______ &ensp;<b>Roll No:</b> _______</div><hr>';
+    var h='<div class="sch">'+e(school)+'</div><div class="ex">'+e(exam)+' — '+e(year)+'</div><div class="ex">'+e(subj)+'</div><hr><div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span><span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' min</span>'+(date?'<span><b>Date:</b> '+e(date)+'</span>':'')+'</div><div class="nml"><b>Name:</b> ___________________________________________ &ensp;<b>Div:</b> _______ &ensp;<b>Roll No:</b> _______</div><hr>';
     if(ins.length)h+='<div class="ins"><b>Instructions:</b><ol>'+ins.map(function(l){return'<li>'+e(l)+'</li>';}).join('')+'</ol></div>';
     var gn=1;
     secs.forEach(function(sec){h+='<div class="sec-t">'+e(sec.name)+' <span style="font-weight:normal;font-size:10px">('+e(sec.each)+' × '+sec.qs.length+' = '+e(sec.total)+' marks)</span></div>';if(sec.inst)h+='<div class="sec-i">('+e(sec.inst)+')</div>';sec.qs.forEach(function(q){h+=renderQPreview(q,gn++);});});
