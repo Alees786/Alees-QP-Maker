@@ -138,6 +138,7 @@ textarea{resize:vertical;line-height:1.5}
 
 .raw{font-family:var(--mono);font-size:11px;line-height:1.7;white-space:pre-wrap;color:var(--ink);padding:12px;background:var(--paper2);border-radius:var(--r);border:1px solid var(--line);overflow-x:auto}
 
+/* Export cards */
 .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .ex-card{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r2);padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s}
 .ex-card:hover{border-color:var(--green);background:var(--green-lt)}
@@ -146,17 +147,30 @@ textarea{resize:vertical;line-height:1.5}
 .ex-title{font-size:12px;font-weight:700;color:var(--ink)}
 .ex-desc{font-size:10px;color:var(--ink3);margin-top:1px}
 .sep-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
-.status-msg{font-size:12px;text-align:center;padding:7px;margin-top:5px;display:none}
-.img-note{font-size:11px;color:var(--green-dk);background:var(--green-lt);border-radius:var(--r);padding:6px 10px;margin-top:6px;display:none}
-.share-tip{font-size:12px;color:var(--ink3);margin-bottom:10px;line-height:1.5}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.share-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border-radius:var(--r);font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;border:none;transition:all .15s;color:#fff}
-.share-btn svg{width:20px;height:20px;flex-shrink:0}
+
+/* Share section */
+.share-tip{font-size:12px;color:var(--ink2);margin-bottom:10px;line-height:1.6;padding:8px 10px;background:var(--paper2);border-radius:var(--r);border:1px solid var(--line)}
+.share-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.share-step-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r)}
+.share-step-num{width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.share-step-text{font-size:12px;color:var(--ink2);line-height:1.5}
+.share-step-text strong{color:var(--ink);display:block;margin-bottom:2px}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.share-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;border:none;transition:all .15s;color:#fff;flex:1;min-width:130px}
+.share-btn svg{width:18px;height:18px;flex-shrink:0}
 .share-btn.wa{background:#25D366}
 .share-btn.wa:hover{background:#1ebe5d}
 .share-btn.tg{background:#2AABEE}
 .share-btn.tg:hover{background:#1a9de0}
 .share-btn:active{transform:scale(.97)}
+.dl-first-btn{width:100%;padding:11px 16px;border-radius:var(--r);background:var(--green);color:#fff;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.dl-first-btn:hover{background:var(--green-dk)}
+.dl-first-btn:active{transform:scale(.98)}
+
+.img-note{font-size:11px;color:var(--green-dk);background:var(--green-lt);border-radius:var(--r);padding:6px 10px;margin-top:6px;display:none}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:5px 10px;border-radius:99px;font-weight:600;margin-bottom:8px}
+.status-badge.done{background:var(--green-lt);color:var(--green-dk)}
+.status-badge.wait{background:var(--amber-lt);color:var(--amber)}
 </style>
 </head>
 <body>
@@ -166,7 +180,7 @@ textarea{resize:vertical;line-height:1.5}
   <div class="hdr-icon"><svg viewBox="0 0 18 18"><rect x="1" y="2" width="16" height="2" rx="1"/><rect x="1" y="6" width="11" height="2" rx="1"/><rect x="1" y="10" width="16" height="2" rx="1"/><rect x="1" y="14" width="8" height="2" rx="1"/></svg></div>
   <div>
     <div class="hdr-name">Question Paper Maker</div>
-    <div class="hdr-sub">Text · MCQ · Match · Table · Image — Images embedded in all exports</div>
+    <div class="hdr-sub">Text · MCQ · Match · Table · Image — PDF &amp; DOCX export</div>
   </div>
 </div>
 
@@ -257,27 +271,77 @@ Answers must be written in the answer booklet provided.</textarea>
 
 <!-- Panel 3: Export -->
 <div class="panel" data-panel="3">
-  <div class="tip">✅ Images are now <strong>fully embedded</strong> in both PDF and Word exports — no missing images.</div>
-  <div class="sep-lbl">Download directly</div>
-  <div class="ex-grid">
-    <div class="ex-card" onclick="dlPDF()"><div class="ex-icon">📋</div><div class="ex-title">Download PDF</div><div class="ex-desc">Print-ready · A4 · Images included</div></div>
-    <div class="ex-card" onclick="dlDoc()"><div class="ex-icon">📄</div><div class="ex-title">Download Word</div><div class="ex-desc">Editable .doc · Images embedded</div></div>
-  </div>
-  <div id="imgNote" class="img-note">📷 Images detected — they will be fully embedded in the downloaded file.</div>
+  <div class="tip">📄 <strong>DOCX</strong> works on all devices — Android, iPhone, Windows, Mac. PDF for printing.</div>
 
-  <div class="sep-lbl" style="margin-top:14px">Share question paper file</div>
-  <div class="share-tip">Downloads the Word file first, then opens WhatsApp or Telegram so you can attach and send it directly.</div>
-  <div class="share-grid">
-    <button class="share-btn wa" onclick="shareDocWA()">
+  <div class="sep-lbl">Download</div>
+  <div class="ex-grid">
+    <div class="ex-card" onclick="dlPDF()">
+      <div class="ex-icon">📋</div>
+      <div class="ex-title">Download PDF</div>
+      <div class="ex-desc">Print-ready · A4 · All images</div>
+    </div>
+    <div class="ex-card" onclick="dlDocx()">
+      <div class="ex-icon">📄</div>
+      <div class="ex-title">Download DOCX</div>
+      <div class="ex-desc">Word format · All devices · Images embedded</div>
+    </div>
+  </div>
+  <div id="imgNote" class="img-note">📷 Images detected — embedded in both PDF and DOCX.</div>
+
+  <!-- Share section -->
+  <div class="sep-lbl" style="margin-top:16px">Share via WhatsApp or Telegram</div>
+  <div class="share-tip">
+    <strong>How it works:</strong> First download the DOCX file, then open WhatsApp or Telegram and attach the file from your Downloads folder.
+  </div>
+
+  <div class="share-steps">
+    <div class="share-step-row">
+      <div class="share-step-num">1</div>
+      <div class="share-step-text">
+        <strong>Download the DOCX file</strong>
+        Tap the button below — file saves to your Downloads folder.
+      </div>
+    </div>
+    <div class="share-step-row">
+      <div class="share-step-num">2</div>
+      <div class="share-step-text">
+        <strong>Open WhatsApp or Telegram</strong>
+        Choose the contact or group to share with.
+      </div>
+    </div>
+    <div class="share-step-row">
+      <div class="share-step-num">3</div>
+      <div class="share-step-text">
+        <strong>Attach the file</strong>
+        Tap 📎 → Files/Documents → select the downloaded DOCX from Downloads.
+      </div>
+    </div>
+  </div>
+
+  <button class="dl-first-btn" onclick="dlDocxAndHint()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Step 1: Download DOCX File
+  </button>
+
+  <div id="dlDoneMsg" style="display:none;margin-bottom:10px">
+    <span class="status-badge done">✓ File downloaded — now open an app below to share</span>
+  </div>
+
+  <div class="share-btns">
+    <button class="share-btn wa" onclick="openWA()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Send via WhatsApp
+      Open WhatsApp
     </button>
-    <button class="share-btn tg" onclick="shareDocTG()">
+    <button class="share-btn tg" onclick="openTG()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      Send via Telegram
+      Open Telegram
     </button>
   </div>
-  <div id="shareHint" style="font-size:11.5px;color:var(--ink3);background:var(--paper2);border-radius:var(--r);padding:8px 10px;margin-top:4px;line-height:1.6;display:none"></div>
+
+  <div style="font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.6;padding:6px 0">
+    💡 On Android: WhatsApp → tap 📎 → Document → select the .docx from Downloads.<br>
+    💡 On iPhone: WhatsApp → tap ＋ → Document → Files app → Downloads.
+  </div>
 
   <div class="nav">
     <button class="btn btn-outline" style="flex:1" onclick="goStep(2)">← Back</button>
@@ -289,17 +353,18 @@ Answers must be written in the answer booklet provided.</textarea>
 </div>
 
 </div>
+
+<!-- JSZip for DOCX generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 var APP = (function(){
-  var secs = [], sid = 0, qid = 0, currentStep = 0;
+  var secs = [], sid = 0, qid = 0;
 
   function goStep(n) {
-    currentStep = n;
     var panels = document.querySelectorAll('.panel');
     for (var i = 0; i < panels.length; i++) {
       var pn = parseInt(panels[i].getAttribute('data-panel'));
-      if (pn === n) panels[i].classList.add('active');
-      else panels[i].classList.remove('active');
+      panels[i].classList.toggle('active', pn === n);
     }
     var steps = document.querySelectorAll('.step');
     for (var i = 0; i < steps.length; i++) {
@@ -311,7 +376,7 @@ var APP = (function(){
       if (numEl) numEl.textContent = sn < n ? '✓' : sn + 1;
     }
     if (n === 2) renderPrev();
-    if (n === 3) { buildFname(); checkImgNote(); }
+    if (n === 3) checkImgNote();
     window.scrollTo(0, 0);
   }
 
@@ -327,15 +392,6 @@ var APP = (function(){
   function getSubj() {
     var v = document.getElementById('subj').value;
     return v === 'Other (type below)' ? (document.getElementById('subjC').value.trim() || 'Subject') : v;
-  }
-
-  function buildFname() {
-    var cls = document.getElementById('cls').value;
-    var set = document.getElementById('setv').value;
-    var subj = getSubj().split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase();
-    var yr = document.getElementById('year').value.replace('-','');
-    var el = document.getElementById('fname');
-    if (el) el.value = 'QP_Class' + cls + '_' + subj + (set ? '_Set' + set : '') + '_' + yr;
   }
 
   function checkImgNote() {
@@ -357,8 +413,7 @@ var APP = (function(){
     renderSecs();
   }
   function updSec(id, f, v) {
-    var s = findSec(id);
-    if (s) s[f] = v;
+    var s = findSec(id); if (s) s[f] = v;
   }
   function findSec(id) {
     for (var i = 0; i < secs.length; i++) if (secs[i].id === id) return secs[i];
@@ -376,41 +431,34 @@ var APP = (function(){
     return base;
   }
   function addQ(sid, type) {
-    var s = findSec(sid);
-    if (s) { s.qs.push(makeQ(type)); renderSecs(); }
+    var s = findSec(sid); if (s) { s.qs.push(makeQ(type)); renderSecs(); }
   }
   function removeQ(sid, qi) {
-    var s = findSec(sid);
-    if (s) { s.qs.splice(qi, 1); renderSecs(); }
+    var s = findSec(sid); if (s) { s.qs.splice(qi, 1); renderSecs(); }
   }
   function updQF(sid, qi, field, val) {
-    var s = findSec(sid);
-    if (s && s.qs[qi]) s.qs[qi][field] = val;
+    var s = findSec(sid); if (s && s.qs[qi]) s.qs[qi][field] = val;
   }
   function updQOpt(sid, qi, oi, val) {
-    var s = findSec(sid);
-    if (s && s.qs[qi]) s.qs[qi].opts[oi] = val;
+    var s = findSec(sid); if (s && s.qs[qi]) s.qs[qi].opts[oi] = val;
   }
   function addMatchPair(sid, qi) {
-    var s = findSec(sid);
-    if (s && s.qs[qi]) { s.qs[qi].pairs.push({l:'',r:''}); renderSecs(); }
+    var s = findSec(sid); if (s && s.qs[qi]) { s.qs[qi].pairs.push({l:'',r:''}); renderSecs(); }
   }
   function removeMatchPair(sid, qi, pi) {
-    var s = findSec(sid);
-    if (s && s.qs[qi] && s.qs[qi].pairs.length > 1) { s.qs[qi].pairs.splice(pi,1); renderSecs(); }
+    var s = findSec(sid); if (s && s.qs[qi] && s.qs[qi].pairs.length > 1) { s.qs[qi].pairs.splice(pi,1); renderSecs(); }
   }
   function updMatchPair(sid, qi, pi, side, val) {
-    var s = findSec(sid);
-    if (s && s.qs[qi]) s.qs[qi].pairs[pi][side] = val;
+    var s = findSec(sid); if (s && s.qs[qi]) s.qs[qi].pairs[pi][side] = val;
   }
   function addTblRow(sid, qi) {
     var s = findSec(sid); if (!s || !s.qs[qi]) return;
-    var q = s.qs[qi]; q.rows++; q.data.push(new Array(q.cols).fill(''));renderSecs();
+    var q = s.qs[qi]; q.rows++; q.data.push(new Array(q.cols).fill('')); renderSecs();
   }
   function addTblCol(sid, qi) {
     var s = findSec(sid); if (!s || !s.qs[qi]) return;
     var q = s.qs[qi]; q.cols++; q.headers.push('Column '+(q.cols));
-    q.data.forEach(function(r){r.push('');});renderSecs();
+    q.data.forEach(function(r){r.push('');}); renderSecs();
   }
   function removeTblRow(sid, qi) {
     var s = findSec(sid); if (!s || !s.qs[qi]) return;
@@ -418,7 +466,7 @@ var APP = (function(){
   }
   function removeTblCol(sid, qi) {
     var s = findSec(sid); if (!s || !s.qs[qi]) return;
-    var q = s.qs[qi]; if(q.cols>1){q.cols--;q.headers.pop();q.data.forEach(function(r){r.pop();});renderSecs();}
+    var q = s.qs[qi]; if(q.cols>1){q.cols--;q.headers.pop();q.data.forEach(function(r){r.pop();}); renderSecs();}
   }
   function updTblH(sid, qi, ci, val) {
     var s = findSec(sid); if(s&&s.qs[qi]) s.qs[qi].headers[ci]=val;
@@ -426,8 +474,6 @@ var APP = (function(){
   function updTblC(sid, qi, ri, ci, val) {
     var s = findSec(sid); if(s&&s.qs[qi]) s.qs[qi].data[ri][ci]=val;
   }
-
-  // KEY FIX: store both imgData (full data-URL) and imgType separately
   function handleImg(sid, qi, input) {
     if (!input.files || !input.files[0]) return;
     var f = input.files[0];
@@ -436,7 +482,7 @@ var APP = (function(){
     reader.onload = function(ev) {
       var s = findSec(sid);
       if (s && s.qs[qi]) {
-        s.qs[qi].imgData = ev.target.result; // full data-URL e.g. data:image/jpeg;base64,...
+        s.qs[qi].imgData = ev.target.result;
         s.qs[qi].imgType = imgType;
         renderSecs();
       }
@@ -446,6 +492,10 @@ var APP = (function(){
 
   function e(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function ex(s) { return String(s||''); } // XML-escape for OOXML
+  function xmlEsc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
   }
 
   function typeInfo(t) {
@@ -478,7 +528,7 @@ var APP = (function(){
           '<div class="field" style="margin:0"><label>&nbsp;</label><div style="font-size:11px;color:var(--ink3);padding-top:8px">'+sec.qs.length+' question'+(sec.qs.length!==1?'s':'')+'</div></div>' +
         '</div>' +
         '<div class="field" style="margin-bottom:8px"><label>Section instruction</label>' +
-          '<input type="text" value="'+e(sec.inst)+'" placeholder="e.g. Answer any five. Each carries '+e(sec.each)+' marks." onchange="APP.updSec('+sec.id+',\'inst\',this.value)"></div>' +
+          '<input type="text" value="'+e(sec.inst)+'" placeholder="e.g. Answer any five." onchange="APP.updSec('+sec.id+',\'inst\',this.value)"></div>' +
         '<div>'+qs_html+'</div>' +
         '<div style="margin-top:8px">' +
           '<div class="lbl" style="margin-bottom:5px">Add question:</div>' +
@@ -498,8 +548,7 @@ var APP = (function(){
     var ti = typeInfo(q.type);
     var body = '';
     if (q.type === 'text') {
-      body =
-        '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
+      body = '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
         '<textarea rows="2" placeholder="Enter question…" onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)">'+e(q.text)+'</textarea></div>' +
         '<div style="display:flex;align-items:center;gap:8px"><label class="lbl" style="margin:0">Marks</label>' +
         '<input type="number" value="'+e(q.marks)+'" min="0" style="width:70px" onchange="APP.updQF('+sid+','+qi+',\'marks\',this.value)"></div>';
@@ -509,8 +558,7 @@ var APP = (function(){
           '<input type="text" value="'+e(q.opts[oi])+'" placeholder="Option '+l+'" onchange="APP.updQOpt('+sid+','+qi+','+oi+',this.value)"></div>';
       }).join('');
       var sel = ['','A','B','C','D'].map(function(v){return '<option value="'+v+'"'+(q.correct===v?' selected':'')+'>'+( v||'—')+'</option>';}).join('');
-      body =
-        '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
+      body = '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
         '<textarea rows="2" placeholder="Enter MCQ question…" onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)">'+e(q.text)+'</textarea></div>' +
         '<div class="mcq-opts">'+opts+'</div>' +
         '<div style="display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap">' +
@@ -528,8 +576,7 @@ var APP = (function(){
           '<button class="btn-del" onclick="APP.removeMatchPair('+sid+','+qi+','+pi+')">✕</button>' +
         '</div>';
       }).join('');
-      body =
-        '<div class="field" style="margin-bottom:6px"><label>Instruction</label>' +
+      body = '<div class="field" style="margin-bottom:6px"><label>Instruction</label>' +
         '<input type="text" value="'+e(q.text)+'" placeholder="Match the following." onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)"></div>' +
         '<div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:5px;margin-bottom:4px">' +
           '<div class="lbl">Column A</div><div></div><div class="lbl">Column B</div><div></div></div>' +
@@ -548,9 +595,8 @@ var APP = (function(){
           return '<td><input type="text" value="'+e(cell)+'" placeholder="…" onchange="APP.updTblC('+sid+','+qi+','+ri+','+ci+',this.value)"></td>';
         }).join('')+'</tr>';
       }).join('');
-      body =
-        '<div class="field" style="margin-bottom:6px"><label>Instruction</label>' +
-        '<input type="text" value="'+e(q.text)+'" placeholder="Study the table and answer." onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)"></div>' +
+      body = '<div class="field" style="margin-bottom:6px"><label>Instruction</label>' +
+        '<input type="text" value="'+e(q.text)+'" placeholder="Study the table." onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)"></div>' +
         '<div class="tbl-editor"><table><thead><tr>'+hdrs+'</tr></thead><tbody>'+rows+'</tbody></table></div>' +
         '<div class="tbl-controls">' +
           '<button class="btn-ghost" onclick="APP.addTblRow('+sid+','+qi+')" style="border:1px solid var(--line2);font-size:11px">+ Row</button>' +
@@ -563,13 +609,12 @@ var APP = (function(){
     } else if (q.type === 'image') {
       var imgPrev = q.imgData ? '<div class="img-preview"><img src="'+q.imgData+'" alt="question image"></div>' : '';
       var uploadLabel = q.imgData ? '📷 Image uploaded — tap to replace' : '📷 Tap to upload image';
-      body =
-        '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
+      body = '<div class="field" style="margin-bottom:6px"><label>Question text</label>' +
         '<textarea rows="2" placeholder="Question referring to the image…" onchange="APP.updQF('+sid+','+qi+',\'text\',this.value)">'+e(q.text)+'</textarea></div>' +
         '<div class="img-upload-area">' +
           '<input type="file" accept="image/*" onchange="APP.handleImg('+sid+','+qi+',this)">' +
           '<div style="font-size:13px;color:var(--ink3)">'+uploadLabel+'</div>' +
-          '<div style="font-size:11px;color:var(--ink3);margin-top:3px">JPG, PNG, GIF — embedded in PDF &amp; Word</div>' +
+          '<div style="font-size:11px;color:var(--ink3);margin-top:3px">JPG, PNG, GIF — embedded in DOCX &amp; PDF</div>' +
         '</div>' +
         imgPrev +
         (q.imgData ? '<div style="font-size:11px;color:var(--green-dk);margin-top:4px">✓ Image stored — will appear in all exports</div>' : '') +
@@ -588,6 +633,7 @@ var APP = (function(){
     '</div>';
   }
 
+  /* ── Preview ── */
   function renderPrev() {
     var school=document.getElementById('school').value, exam=document.getElementById('exam').value;
     var subj=getSubj(), cls=document.getElementById('cls').value;
@@ -620,7 +666,7 @@ var APP = (function(){
     var raw = school+'\n'+exam+' — '+year+'\n'+subj+'\n'+'─'.repeat(55)+'\n';
     raw += 'Class: '+cls+(set?' | Set: '+set:'')+'  |  Max Marks: '+marks+'  |  Time: '+tmin+' min\n';
     if (date) raw += 'Date: '+date+'\n';
-    raw += 'Name: _______________________  Div: ______  Roll No: ______\n'+'─'.repeat(55)+'\n\n';
+    raw += 'Name: _______________________ Div:______ Roll No:______\n'+'─'.repeat(55)+'\n\n';
     if (ins.length) raw += 'Instructions:\n'+ins.map(function(l,i){return '  '+(i+1)+'. '+l;}).join('\n')+'\n\n';
     var rn = 1;
     secs.forEach(function(sec) {
@@ -633,9 +679,7 @@ var APP = (function(){
   }
 
   function renderQPreview(q, num) {
-    if (q.type === 'text') {
-      return '<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[empty question]</span>')+'</div>';
-    }
+    if (q.type === 'text') return '<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[empty question]</span>')+'</div>';
     if (q.type === 'mcq') {
       var h = '<div class="q">'+num+'. '+(q.text.trim()?e(q.text):'<span class="ph">[MCQ question]</span>')+'</div>';
       q.opts.forEach(function(o,oi){if(o.trim())h+='<div class="mcq-opt">'+String.fromCharCode(65+oi)+'. '+e(o)+'</div>';});
@@ -693,72 +737,7 @@ var APP = (function(){
     document.getElementById('prevRaw').style.display  = mode==='raw' ? '' : 'none';
   }
 
-  /* ── Shared header builder ── */
-  function buildHeader() {
-    var school=document.getElementById('school').value, exam=document.getElementById('exam').value;
-    var subj=getSubj(), cls=document.getElementById('cls').value;
-    var marks=document.getElementById('marks').value, tmin=document.getElementById('tmin').value;
-    var set=document.getElementById('setv').value, year=document.getElementById('year').value;
-    var date=document.getElementById('edate').value;
-    var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
-    var h = '<div class="sch">'+e(school)+'</div>\n<div class="ex">'+e(exam)+' — '+e(year)+'</div>\n<div class="ex">'+e(subj)+'</div>\n<hr>\n' +
-      '<div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span>' +
-      '<span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' Minutes</span>'+
-      (date?'<span><b>Date:</b> '+e(date)+'</span>':'')+
-      '</div>\n<div class="nml"><b>Name:</b> _________________________________________ &ensp;<b>Div:</b> __________ &ensp;<b>Roll No:</b> __________</div>\n<hr>\n';
-    if (ins.length) h += '<div class="ins"><b>Instructions:</b><ol>'+ins.map(function(l){return '<li>'+e(l)+'</li>';}).join('')+'</ol></div>\n';
-    return h;
-  }
-
-  /* ── Image rendering for exports ──
-     imgData is a full data-URL: "data:image/jpeg;base64,/9j/..."
-     Word/HTML export: use <img src="data:..."> directly — modern Word handles this fine.
-     The key fix: NEVER strip the data-URL for Word export. Always pass imgData as-is.
-  */
-  function renderQForExport(q, num) {
-    if (q.type === 'text') return '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
-    if (q.type === 'mcq') {
-      var h = '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
-      q.opts.forEach(function(o,i){if(o.trim())h+='<div class="mcq-opt">'+String.fromCharCode(65+i)+'. '+e(o)+'</div>\n';});
-      return h;
-    }
-    if (q.type === 'match') {
-      var h = '<div class="q">'+num+'. '+e(q.text)+'</div>\n';
-      h += '<table class="match-tbl"><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>\n';
-      q.pairs.forEach(function(p){h+='<tr><td>'+(e(p.l)||'&nbsp;')+'</td><td>'+(e(p.r)||'&nbsp;')+'</td></tr>\n';});
-      return h+'</tbody></table>\n';
-    }
-    if (q.type === 'table') {
-      var h = '<div class="q">'+num+'. '+e(q.text)+'</div>\n';
-      h += '<table class="data-tbl"><thead><tr>'+q.headers.map(function(hd){return '<th>'+e(hd)+'</th>';}).join('')+'</tr></thead><tbody>\n';
-      q.data.forEach(function(row){h+='<tr>'+row.map(function(cell){return '<td>'+(e(cell)||'&nbsp;')+'</td>';}).join('')+'</tr>\n';});
-      return h+'</tbody></table>\n';
-    }
-    if (q.type === 'image') {
-      var h = '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
-      // FIXED: embed the full base64 data-URL directly — works in both PDF popup and Word .doc
-      if (q.imgData) {
-        h += '<img class="q-img" src="'+q.imgData+'" alt="'+(q.caption?e(q.caption):'question image')+'">\n';
-      } else {
-        h += '<div class="q" style="color:#888;font-style:italic">[No image uploaded]</div>\n';
-      }
-      if (q.caption) h += '<div class="q-img-cap">'+e(q.caption)+'</div>\n';
-      return h;
-    }
-    return '';
-  }
-
-  function buildBody() {
-    var h = '', gn = 1;
-    secs.forEach(function(sec) {
-      h += '<div class="sec-t">'+e(sec.name)+' <span style="font-weight:normal;font-size:11px">('+e(sec.each)+' × '+sec.qs.length+' = '+e(sec.total)+' marks)</span></div>\n';
-      if (sec.inst) h += '<div class="sec-i">('+e(sec.inst)+')</div>\n';
-      sec.qs.forEach(function(q){ h += renderQForExport(q, gn++); });
-    });
-    return h;
-  }
-
-  /* ── PDF ── */
+  /* ── PDF export (popup/print) ── */
   function dlPDF() {
     var win = window.open('','_blank');
     if (!win) { alert('Please allow pop-ups to download PDF.'); return; }
@@ -786,100 +765,399 @@ var APP = (function(){
       '.q-img-cap{margin-left:16px;font-size:10px;font-style:italic;color:#555}' +
       '.pbtn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#0F6E56;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-family:sans-serif}' +
       '@media print{.pbtn{display:none}}';
+
+    var body = buildHTMLHeader() + buildHTMLBody();
     win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Question Paper</title><style>'+css+'</style></head><body>' +
-      '<button class="pbtn" onclick="window.print()">Print / Save PDF</button>' +
-      buildHeader() + buildBody() + '</body></html>');
+      '<button class="pbtn" onclick="window.print()">Print / Save PDF</button>' + body + '</body></html>');
     win.document.close();
   }
 
-  /* ── Word / .doc ──
-     Uses the mhtml/Word HTML format. Images must be embedded as base64 data-URLs.
-     The critical fix: <img src="data:image/jpeg;base64,..."> is preserved as-is in the blob.
-     Word 2007+ and LibreOffice both render embedded base64 images in .doc HTML files correctly.
-  */
-  function dlDoc() {
-    var fn = (document.getElementById('fname') && document.getElementById('fname').value) || 'question_paper';
-    var css =
-      '@page{size:21cm 29.7cm;margin:2cm 2.5cm}' +
-      'body{font-family:"Times New Roman",serif;font-size:13pt;line-height:1.7;color:#000}' +
-      '.sch{text-align:center;font-size:16pt;font-weight:bold}' +
-      '.ex{text-align:center;font-size:13pt;font-weight:bold;margin:3pt 0}' +
-      'hr{border-top:1.5pt solid #000}.nml,.meta{font-size:11pt;margin:4pt 0}' +
-      '.ins{font-size:11pt;font-style:italic;padding:5pt 8pt;border-left:2pt solid #bbb}' +
-      '.ins ol{margin:3pt 0 0 14pt}' +
-      '.sec-t{font-weight:bold;font-size:13pt;border-bottom:1pt solid #ccc;margin-top:14pt;margin-bottom:4pt}' +
-      '.sec-i{font-size:11pt;font-style:italic;color:#555}' +
-      '.q{margin-left:16pt;font-size:12.5pt;margin-top:4pt}' +
-      '.mcq-opt{margin-left:30pt;font-size:11pt}' +
-      '.match-tbl{width:85%;margin-left:16pt;border-collapse:collapse;font-size:11pt}' +
-      '.match-tbl td,.match-tbl th{padding:3pt 8pt;border:1pt solid #ccc}' +
-      '.match-tbl th{background:#f0f0f0;font-weight:bold}' +
-      '.data-tbl{width:85%;margin-left:16pt;border-collapse:collapse;font-size:11pt}' +
-      '.data-tbl td,.data-tbl th{padding:3pt 8pt;border:1pt solid #ccc}' +
-      '.data-tbl th{background:#f0f0f0;font-weight:bold}' +
-      /* KEY: images in Word export — max-width keeps them within margins */
-      '.q-img{display:block;max-width:65%;margin:6pt 0 3pt 16pt;border:1pt solid #ccc}' +
-      '.q-img-cap{margin-left:16pt;font-size:9pt;font-style:italic;color:#555}';
-
-    var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
-      '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->' +
-      '<style>'+css+'</style></head>' +
-      '<body>'+buildHeader()+buildBody()+'</body></html>';
-
-    // Use application/msword MIME — tells Word to open as a document
-    var blob = new Blob([html], {type: 'application/msword;charset=utf-8'});
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = fn + '.doc';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
+  /* ── HTML builders for PDF ── */
+  function buildHTMLHeader() {
+    var school=document.getElementById('school').value, exam=document.getElementById('exam').value;
+    var subj=getSubj(), cls=document.getElementById('cls').value;
+    var marks=document.getElementById('marks').value, tmin=document.getElementById('tmin').value;
+    var set=document.getElementById('setv').value, year=document.getElementById('year').value;
+    var date=document.getElementById('edate').value;
+    var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
+    var h = '<div class="sch">'+e(school)+'</div>\n<div class="ex">'+e(exam)+' — '+e(year)+'</div>\n<div class="ex">'+e(subj)+'</div>\n<hr>\n' +
+      '<div class="meta"><span><b>Class:</b> '+e(cls)+(set?'&ensp;<b>Set:</b> '+e(set):'')+'</span>' +
+      '<span><b>Max Marks:</b> '+e(marks)+'</span><span><b>Time:</b> '+e(tmin)+' Minutes</span>'+
+      (date?'<span><b>Date:</b> '+e(date)+'</span>':'')+
+      '</div>\n<div class="nml"><b>Name:</b> _________________________________________ &ensp;<b>Div:</b> __________ &ensp;<b>Roll No:</b> __________</div>\n<hr>\n';
+    if (ins.length) h += '<div class="ins"><b>Instructions:</b><ol>'+ins.map(function(l){return '<li>'+e(l)+'</li>';}).join('')+'</ol></div>\n';
+    return h;
+  }
+  function buildHTMLBody() {
+    var h = '', gn = 1;
+    secs.forEach(function(sec) {
+      h += '<div class="sec-t">'+e(sec.name)+' <span style="font-weight:normal;font-size:11px">('+e(sec.each)+' × '+sec.qs.length+' = '+e(sec.total)+' marks)</span></div>\n';
+      if (sec.inst) h += '<div class="sec-i">('+e(sec.inst)+')</div>\n';
+      sec.qs.forEach(function(q){ h += renderQForPDF(q, gn++); });
+    });
+    return h;
+  }
+  function renderQForPDF(q, num) {
+    if (q.type === 'text') return '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
+    if (q.type === 'mcq') {
+      var h = '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
+      q.opts.forEach(function(o,i){if(o.trim())h+='<div class="mcq-opt">'+String.fromCharCode(65+i)+'. '+e(o)+'</div>\n';});
+      return h;
+    }
+    if (q.type === 'match') {
+      var h = '<div class="q">'+num+'. '+e(q.text)+'</div>\n';
+      h += '<table class="match-tbl"><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>\n';
+      q.pairs.forEach(function(p){h+='<tr><td>'+(e(p.l)||'&nbsp;')+'</td><td>'+(e(p.r)||'&nbsp;')+'</td></tr>\n';});
+      return h+'</tbody></table>\n';
+    }
+    if (q.type === 'table') {
+      var h = '<div class="q">'+num+'. '+e(q.text)+'</div>\n';
+      h += '<table class="data-tbl"><thead><tr>'+q.headers.map(function(hd){return '<th>'+e(hd)+'</th>';}).join('')+'</tr></thead><tbody>\n';
+      q.data.forEach(function(row){h+='<tr>'+row.map(function(cell){return '<td>'+(e(cell)||'&nbsp;')+'</td>';}).join('')+'</tr>\n';});
+      return h+'</tbody></table>\n';
+    }
+    if (q.type === 'image') {
+      var h = '<div class="q">'+num+'. '+e(q.text||'')+'</div>\n';
+      if (q.imgData) h += '<img class="q-img" src="'+q.imgData+'" alt="'+(q.caption?e(q.caption):'question image')+'">\n';
+      else h += '<div class="q" style="color:#888;font-style:italic">[No image uploaded]</div>\n';
+      if (q.caption) h += '<div class="q-img-cap">'+e(q.caption)+'</div>\n';
+      return h;
+    }
+    return '';
   }
 
-  /* ── Share DOCX file ──
-     Browser security prevents directly attaching files to WhatsApp/Telegram.
-     Best UX: download the file first, then open the app so user can attach it.
-  */
-  function getDocFilename() {
-    var el = document.getElementById('fname');
-    return (el && el.value) ? el.value : 'question_paper';
+  /* ══════════════════════════════════════════════
+     DOCX EXPORT — proper OOXML .docx via JSZip
+     Images are embedded as binary relationships
+     ══════════════════════════════════════════════ */
+  function dlDocx() {
+    if (typeof JSZip === 'undefined') {
+      alert('JSZip library not loaded. Please check your internet connection and try again.');
+      return;
+    }
+
+    var school=document.getElementById('school').value, exam=document.getElementById('exam').value;
+    var subj=getSubj(), cls=document.getElementById('cls').value;
+    var marks=document.getElementById('marks').value, tmin=document.getElementById('tmin').value;
+    var set=document.getElementById('setv').value, year=document.getElementById('year').value;
+    var date=document.getElementById('edate').value;
+    var ins=document.getElementById('insts').value.split('\n').filter(function(l){return l.trim();});
+
+    // Collect all images and assign rId
+    var imgList = []; // {rId, ext, mimeType, base64data}
+    var imgRidMap = {}; // qid -> rId
+    var rIdCounter = 2; // rId1 = styles
+
+    secs.forEach(function(sec){
+      sec.qs.forEach(function(q){
+        if (q.type === 'image' && q.imgData) {
+          var rId = 'rId' + rIdCounter++;
+          var ext = (q.imgType||'image/png').split('/')[1] || 'png';
+          if (ext === 'jpeg') ext = 'jpg';
+          var base64 = q.imgData.split(',')[1];
+          imgList.push({rId:rId, ext:ext, mimeType:q.imgType||'image/png', base64:base64, fname:'img'+imgList.length+'.'+ext});
+          imgRidMap[q.id] = rId;
+        }
+      });
+    });
+
+    // Build document.xml
+    function pt(n) { return Math.round(n * 20); } // points to twips/twentieths
+    function cm(n) { return Math.round(n * 567); } // cm to twips
+
+    function wRun(text, bold) {
+      return '<w:r>'+(bold?'<w:rPr><w:b/></w:rPr>':'')+
+        '<w:t xml:space="preserve">'+xmlEsc(text)+'</w:t></w:r>';
+    }
+    function wPara(content, style, spacing) {
+      var pPr = '';
+      if (style||spacing) {
+        pPr = '<w:pPr>';
+        if (style) pPr += '<w:pStyle w:val="'+style+'"/>';
+        if (spacing) pPr += '<w:spacing w:after="'+spacing+'"/>';
+        pPr += '</w:pPr>';
+      }
+      return '<w:p>'+pPr+content+'</w:p>';
+    }
+    function wBold(text) { return wRun(text,true); }
+    function wText(text) { return wRun(text,false); }
+    function wHR() {
+      return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="000000"/></w:pBdr></w:pPr></w:p>';
+    }
+
+    var docBody = '';
+
+    // Title block
+    docBody += '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="40"/></w:pPr>' +
+      '<w:r><w:rPr><w:b/><w:sz w:val="32"/></w:rPr><w:t>'+xmlEsc(school)+'</w:t></w:r></w:p>';
+    docBody += '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="40"/></w:pPr>' +
+      '<w:r><w:rPr><w:b/><w:sz w:val="26"/></w:rPr><w:t>'+xmlEsc(exam+' — '+year)+'</w:t></w:r></w:p>';
+    docBody += '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="60"/></w:pPr>' +
+      '<w:r><w:rPr><w:b/><w:sz w:val="26"/></w:rPr><w:t>'+xmlEsc(subj)+'</w:t></w:r></w:p>';
+    docBody += wHR();
+
+    // Meta row
+    var metaStr = 'Class: '+cls+(set?' | Set: '+set:'')+
+      '    Max Marks: '+marks+'    Time: '+tmin+' Minutes'+
+      (date?'    Date: '+date:'');
+    docBody += '<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>' +
+      '<w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>'+xmlEsc(metaStr)+'</w:t></w:r></w:p>';
+    docBody += '<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>' +
+      '<w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>Name: _________________________________    Div: __________    Roll No: __________</w:t></w:r></w:p>';
+    docBody += wHR();
+
+    // Instructions
+    if (ins.length) {
+      docBody += '<w:p><w:pPr><w:spacing w:after="30"/></w:pPr>' +
+        '<w:r><w:rPr><w:b/><w:sz w:val="22"/></w:rPr><w:t>Instructions:</w:t></w:r></w:p>';
+      ins.forEach(function(line, idx) {
+        docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="20"/></w:pPr>' +
+          '<w:r><w:rPr><w:i/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">'+(idx+1)+'. '+xmlEsc(line)+'</w:t></w:r></w:p>';
+      });
+    }
+
+    // Sections + questions
+    var gn = 1;
+    secs.forEach(function(sec) {
+      // Section heading
+      docBody += '<w:p><w:pPr><w:spacing w:before="200" w:after="60"/><w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="999999"/></w:pBdr></w:pPr>' +
+        '<w:r><w:rPr><w:b/><w:sz w:val="26"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(sec.name)+' </w:t></w:r>' +
+        '<w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:t>('+xmlEsc(sec.each)+' × '+sec.qs.length+' = '+xmlEsc(sec.total)+' marks)</w:t></w:r></w:p>';
+      if (sec.inst) {
+        docBody += '<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>' +
+          '<w:r><w:rPr><w:i/><w:sz w:val="20"/><w:color w:val="666666"/></w:rPr><w:t>('+xmlEsc(sec.inst)+')</w:t></w:r></w:p>';
+      }
+
+      sec.qs.forEach(function(q) {
+        var qnum = gn++;
+        if (q.type === 'text') {
+          docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="80"/></w:pPr>' +
+            '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text||'')+'</w:t></w:r></w:p>';
+        }
+        else if (q.type === 'mcq') {
+          docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/></w:pPr>' +
+            '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text||'')+'</w:t></w:r></w:p>';
+          q.opts.forEach(function(o,i){
+            if(o.trim()) docBody += '<w:p><w:pPr><w:ind w:left="720"/><w:spacing w:after="20"/></w:pPr>' +
+              '<w:r><w:rPr><w:sz w:val="23"/></w:rPr><w:t xml:space="preserve">'+String.fromCharCode(65+i)+'. '+xmlEsc(o)+'</w:t></w:r></w:p>';
+          });
+          docBody += '<w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>';
+        }
+        else if (q.type === 'match') {
+          docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr>' +
+            '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text)+'</w:t></w:r></w:p>';
+          // Table
+          docBody += '<w:tbl><w:tblPr>' +
+            '<w:tblW w:w="7000" w:type="dxa"/>' +
+            '<w:tblBorders>' +
+              '<w:top w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:left w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:bottom w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:right w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:insideH w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:insideV w:val="single" w:sz="4" w:color="cccccc"/>' +
+            '</w:tblBorders>' +
+            '<w:tblInd w:w="360" w:type="dxa"/>' +
+          '</w:tblPr>';
+          // Header row
+          docBody += '<w:tr>' +
+            '<w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="f0f0f0"/></w:tcPr><w:p><w:r><w:rPr><w:b/><w:sz w:val="22"/></w:rPr><w:t>Column A</w:t></w:r></w:p></w:tc>' +
+            '<w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="f0f0f0"/></w:tcPr><w:p><w:r><w:rPr><w:b/><w:sz w:val="22"/></w:rPr><w:t>Column B</w:t></w:r></w:p></w:tc>' +
+          '</w:tr>';
+          q.pairs.forEach(function(p){
+            docBody += '<w:tr>' +
+              '<w:tc><w:p><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>'+xmlEsc(p.l||'')+'</w:t></w:r></w:p></w:tc>' +
+              '<w:tc><w:p><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>'+xmlEsc(p.r||'')+'</w:t></w:r></w:p></w:tc>' +
+            '</w:tr>';
+          });
+          docBody += '</w:tbl><w:p><w:pPr><w:spacing w:after="80"/></w:pPr></w:p>';
+        }
+        else if (q.type === 'table') {
+          docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr>' +
+            '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text)+'</w:t></w:r></w:p>';
+          docBody += '<w:tbl><w:tblPr>' +
+            '<w:tblW w:w="8000" w:type="dxa"/>' +
+            '<w:tblBorders>' +
+              '<w:top w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:left w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:bottom w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:right w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:insideH w:val="single" w:sz="4" w:color="cccccc"/>' +
+              '<w:insideV w:val="single" w:sz="4" w:color="cccccc"/>' +
+            '</w:tblBorders>' +
+            '<w:tblInd w:w="360" w:type="dxa"/>' +
+          '</w:tblPr>';
+          // Header row
+          docBody += '<w:tr>'+q.headers.map(function(hd){
+            return '<w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="f0f0f0"/></w:tcPr><w:p><w:r><w:rPr><w:b/><w:sz w:val="22"/></w:rPr><w:t>'+xmlEsc(hd)+'</w:t></w:r></w:p></w:tc>';
+          }).join('')+'</w:tr>';
+          q.data.forEach(function(row){
+            docBody += '<w:tr>'+row.map(function(cell){
+              return '<w:tc><w:p><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>'+xmlEsc(cell||'')+'</w:t></w:r></w:p></w:tc>';
+            }).join('')+'</w:tr>';
+          });
+          docBody += '</w:tbl><w:p><w:pPr><w:spacing w:after="80"/></w:pPr></w:p>';
+        }
+        else if (q.type === 'image') {
+          docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr>' +
+            '<w:r><w:rPr><w:sz w:val="25"/></w:rPr><w:t xml:space="preserve">'+qnum+'. '+xmlEsc(q.text||'')+'</w:t></w:r></w:p>';
+          if (q.imgData && imgRidMap[q.id]) {
+            var rId = imgRidMap[q.id];
+            // 3cm x 4cm default size in EMU (1cm = 914400/2.54 EMU ≈ 360000)
+            var cx = 4572000; // ~5cm wide
+            var cy = 3429000; // ~3.75cm tall
+            docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="40"/></w:pPr><w:r>' +
+              '<w:rPr><w:noProof/></w:rPr>' +
+              '<w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">' +
+                '<wp:extent cx="'+cx+'" cy="'+cy+'"/>' +
+                '<wp:effectExtent l="0" t="0" r="0" b="0"/>' +
+                '<wp:docPr id="1" name="Image"/>' +
+                '<wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr>' +
+                '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">' +
+                  '<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
+                    '<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
+                      '<pic:nvPicPr><pic:cNvPr id="0" name="Image"/><pic:cNvPicPr/></pic:nvPicPr>' +
+                      '<pic:blipFill>' +
+                        '<a:blip r:embed="'+rId+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>' +
+                        '<a:stretch><a:fillRect/></a:stretch>' +
+                      '</pic:blipFill>' +
+                      '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm>' +
+                        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>' +
+                      '</pic:spPr>' +
+                    '</pic:pic>' +
+                  '</a:graphicData>' +
+                '</a:graphic>' +
+              '</wp:inline></w:drawing></w:r></w:p>';
+            if (q.caption) {
+              docBody += '<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr>' +
+                '<w:r><w:rPr><w:i/><w:sz w:val="18"/><w:color w:val="666666"/></w:rPr><w:t>'+xmlEsc(q.caption)+'</w:t></w:r></w:p>';
+            }
+          } else {
+            docBody += '<w:p><w:pPr><w:ind w:left="360"/></w:pPr>' +
+              '<w:r><w:rPr><w:i/><w:color w:val="888888"/></w:rPr><w:t>[No image uploaded]</w:t></w:r></w:p>';
+          }
+          docBody += '<w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>';
+        }
+      });
+    });
+
+    var documentXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"' +
+        ' xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"' +
+        ' xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"' +
+        ' xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"' +
+        ' xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"' +
+        ' xmlns:o="urn:schemas-microsoft-com:office:office"' +
+        ' xmlns:oel="http://schemas.microsoft.com/office/2019/extlst"' +
+        ' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"' +
+        ' xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"' +
+        ' xmlns:v="urn:schemas-microsoft-com:vml"' +
+        ' xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"' +
+        ' xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"' +
+        ' xmlns:w10="urn:schemas-microsoft-com:office:word"' +
+        ' xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"' +
+        ' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"' +
+        ' xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"' +
+        ' xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"' +
+        ' xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"' +
+        ' xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"' +
+        ' xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"' +
+        ' xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"' +
+        ' xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"' +
+        ' xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"' +
+        ' xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"' +
+        ' xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"' +
+        ' mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">' +
+      '<w:body>' +
+        '<w:sectPr>' +
+          '<w:pgSz w:w="11906" w:h="16838"/>'+  // A4 in twips
+          '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/>'+  // ~2cm margins
+        '</w:sectPr>' +
+      docBody +
+      '</w:body></w:document>';
+
+    // Relationships for document
+    var relsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+    imgList.forEach(function(img){
+      relsXml += '<Relationship Id="'+img.rId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/'+img.fname+'"/>';
+    });
+    relsXml += '</Relationships>';
+
+    // Minimal styles.xml
+    var stylesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+        '<w:docDefaults><w:rPrDefault><w:rPr>' +
+          '<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>' +
+          '<w:sz w:val="24"/>' +
+        '</w:rPr></w:rPrDefault></w:docDefaults>' +
+      '</w:styles>';
+
+    // [Content_Types].xml
+    var ctXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+        '<Default Extension="xml" ContentType="application/xml"/>';
+    var imgExts = {};
+    imgList.forEach(function(img){ imgExts[img.ext] = img.mimeType; });
+    Object.keys(imgExts).forEach(function(ext){
+      ctXml += '<Default Extension="'+ext+'" ContentType="'+imgExts[ext]+'"/>';
+    });
+    ctXml += '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+      '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
+      '</Types>';
+
+    // _rels/.rels
+    var rootRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
+      '</Relationships>';
+
+    // Build ZIP
+    var zip = new JSZip();
+    zip.file('[Content_Types].xml', ctXml);
+    zip.file('_rels/.rels', rootRels);
+    zip.file('word/document.xml', documentXml);
+    zip.file('word/styles.xml', stylesXml);
+    zip.file('word/_rels/document.xml.rels', relsXml);
+
+    imgList.forEach(function(img){
+      zip.file('word/media/'+img.fname, img.base64, {base64:true});
+    });
+
+    // Generate and download
+    var fn = buildDocxFilename();
+    zip.generateAsync({type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
+      .then(function(blob){
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fn + '.docx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+      });
   }
 
-  function showShareHint(app) {
-    var hint = document.getElementById('shareHint');
-    var fn = getDocFilename() + '.doc';
-    hint.style.display = 'block';
-    if (app === 'wa') {
-      hint.innerHTML = '📥 <strong>File downloaded:</strong> <code>'+fn+'</code><br>'+
-        '1. '+app_opened_msg('WhatsApp')+'<br>'+
-        '2. Open a chat → tap the 📎 attachment icon → choose the downloaded file.';
-    } else {
-      hint.innerHTML = '📥 <strong>File downloaded:</strong> <code>'+fn+'</code><br>'+
-        '1. '+app_opened_msg('Telegram')+'<br>'+
-        '2. Open a chat → tap the 📎 attachment icon → choose the downloaded file.';
+  function buildDocxFilename() {
+    var cls = document.getElementById('cls').value;
+    var set = document.getElementById('setv').value;
+    var subj = getSubj().split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase();
+    var yr = document.getElementById('year').value.replace('-','');
+    return 'QP_Class'+cls+'_'+subj+(set?'_Set'+set:'')+'_'+yr;
+  }
+
+  function dlDocxAndHint() {
+    dlDocx();
+    var msg = document.getElementById('dlDoneMsg');
+    if (msg) {
+      setTimeout(function(){ msg.style.display = 'block'; }, 600);
     }
   }
 
-  function app_opened_msg(name) {
-    return name + ' is opening — switch to it after the file downloads.';
-  }
-
-  function shareDocWA() {
-    dlDoc();
-    setTimeout(function() {
-      showShareHint('wa');
-      window.open('https://wa.me/', '_blank');
-    }, 800);
-  }
-
-  function shareDocTG() {
-    dlDoc();
-    setTimeout(function() {
-      showShareHint('tg');
-      window.open('https://t.me/', '_blank');
-    }, 800);
-  }
+  function openWA() { window.open('https://wa.me/', '_blank'); }
+  function openTG() { window.open('https://t.me/', '_blank'); }
 
   function clearAll() {
     document.getElementById('school').value='';
@@ -937,7 +1215,7 @@ var APP = (function(){
       nq('image',{text:'Identify the labeled parts in the image and explain their function in animation.',imgData:'',imgType:'image/png',caption:'Pencil2D interface screenshot',marks:'5'}),
     ];
     secs=[s1,s2,s3,s4,s5];
-    renderSecs(); buildFname();
+    renderSecs();
   }
 
   return {
@@ -946,8 +1224,8 @@ var APP = (function(){
     addMatchPair:addMatchPair, removeMatchPair:removeMatchPair, updMatchPair:updMatchPair,
     addTblRow:addTblRow, addTblCol:addTblCol, removeTblRow:removeTblRow, removeTblCol:removeTblCol,
     updTblH:updTblH, updTblC:updTblC, handleImg:handleImg,
-    swPrev:swPrev, dlPDF:dlPDF, dlDoc:dlDoc,
-    shareDocWA:shareDocWA, shareDocTG:shareDocTG,
+    swPrev:swPrev, dlPDF:dlPDF, dlDocx:dlDocx, dlDocxAndHint:dlDocxAndHint,
+    openWA:openWA, openTG:openTG,
     loadSample:loadSample, clearAll:clearAll
   };
 })();
@@ -957,9 +1235,10 @@ function subjChg(){APP.subjChg();}
 function addSec(){APP.addSec();}
 function swPrev(m,b){APP.swPrev(m,b);}
 function dlPDF(){APP.dlPDF();}
-function dlDoc(){APP.dlDoc();}
-function shareDocWA(){APP.shareDocWA();}
-function shareDocTG(){APP.shareDocTG();}
+function dlDocx(){APP.dlDocx();}
+function dlDocxAndHint(){APP.dlDocxAndHint();}
+function openWA(){APP.openWA();}
+function openTG(){APP.openTG();}
 function loadSample(){APP.loadSample();}
 function clearAll(){APP.clearAll();}
 
