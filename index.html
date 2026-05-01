@@ -265,23 +265,19 @@ Answers must be written in the answer booklet provided.</textarea>
   </div>
   <div id="imgNote" class="img-note">📷 Images detected — they will be fully embedded in the downloaded file.</div>
 
-  <div class="sep-lbl" style="margin-top:14px">Share this tool with other teachers</div>
-  <div class="share-tip">Send the link to this page so other teachers can make their own question papers for any subject.</div>
+  <div class="sep-lbl" style="margin-top:14px">Share question paper file</div>
+  <div class="share-tip">Downloads the Word file first, then opens WhatsApp or Telegram so you can attach and send it directly.</div>
   <div class="share-grid">
-    <button class="share-btn wa" onclick="shareWA()">
+    <button class="share-btn wa" onclick="shareDocWA()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Share on WhatsApp
+      Send via WhatsApp
     </button>
-    <button class="share-btn tg" onclick="shareTG()">
+    <button class="share-btn tg" onclick="shareDocTG()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      Share on Telegram
+      Send via Telegram
     </button>
   </div>
-  <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-    <input type="text" id="pageUrl" readonly style="flex:1;font-size:12px;color:var(--ink3);background:var(--paper2)" value="Loading page URL…">
-    <button class="btn btn-outline" onclick="copyUrl()" style="white-space:nowrap;padding:8px 14px;font-size:12px" id="copyUrlBtn">Copy link</button>
-  </div>
-  <div id="copyOk" style="font-size:11px;color:var(--green);margin-top:4px;display:none">✓ Link copied to clipboard!</div>
+  <div id="shareHint" style="font-size:11.5px;color:var(--ink3);background:var(--paper2);border-radius:var(--r);padding:8px 10px;margin-top:4px;line-height:1.6;display:none"></div>
 
   <div class="nav">
     <button class="btn btn-outline" style="flex:1" onclick="goStep(2)">← Back</button>
@@ -841,49 +837,48 @@ var APP = (function(){
     URL.revokeObjectURL(a.href);
   }
 
-  /* ── Share ── */
-  function getPageUrl() {
-    return window.location.href.split('?')[0].split('#')[0];
+  /* ── Share DOCX file ──
+     Browser security prevents directly attaching files to WhatsApp/Telegram.
+     Best UX: download the file first, then open the app so user can attach it.
+  */
+  function getDocFilename() {
+    var el = document.getElementById('fname');
+    return (el && el.value) ? el.value : 'question_paper';
   }
 
-  function getShareMsg() {
-    var url = getPageUrl();
-    return 'Question Paper Maker — Create professional question papers for any subject (Hindi, Malayalam, IT, Maths…) and download as PDF or Word.\n\n' + url;
-  }
-
-  function shareWA() {
-    var msg = encodeURIComponent(getShareMsg());
-    window.open('https://wa.me/?text=' + msg, '_blank');
-  }
-
-  function shareTG() {
-    var url = encodeURIComponent(getPageUrl());
-    var txt = encodeURIComponent('Question Paper Maker — Create professional question papers for any subject and download as PDF or Word.');
-    window.open('https://t.me/share/url?url=' + url + '&text=' + txt, '_blank');
-  }
-
-  function copyUrl() {
-    var url = getPageUrl();
-    var el = document.getElementById('pageUrl');
-    el.value = url;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(function() { showCopyOk(); });
+  function showShareHint(app) {
+    var hint = document.getElementById('shareHint');
+    var fn = getDocFilename() + '.doc';
+    hint.style.display = 'block';
+    if (app === 'wa') {
+      hint.innerHTML = '📥 <strong>File downloaded:</strong> <code>'+fn+'</code><br>'+
+        '1. '+app_opened_msg('WhatsApp')+'<br>'+
+        '2. Open a chat → tap the 📎 attachment icon → choose the downloaded file.';
     } else {
-      el.select(); document.execCommand('copy'); showCopyOk();
+      hint.innerHTML = '📥 <strong>File downloaded:</strong> <code>'+fn+'</code><br>'+
+        '1. '+app_opened_msg('Telegram')+'<br>'+
+        '2. Open a chat → tap the 📎 attachment icon → choose the downloaded file.';
     }
   }
 
-  function showCopyOk() {
-    var ok = document.getElementById('copyOk');
-    var btn = document.getElementById('copyUrlBtn');
-    ok.style.display = 'block';
-    btn.textContent = '✓ Copied!';
-    setTimeout(function(){ ok.style.display='none'; btn.textContent='Copy link'; }, 2500);
+  function app_opened_msg(name) {
+    return name + ' is opening — switch to it after the file downloads.';
   }
 
-  function initShareUrl() {
-    var el = document.getElementById('pageUrl');
-    if (el) el.value = getPageUrl();
+  function shareDocWA() {
+    dlDoc();
+    setTimeout(function() {
+      showShareHint('wa');
+      window.open('https://wa.me/', '_blank');
+    }, 800);
+  }
+
+  function shareDocTG() {
+    dlDoc();
+    setTimeout(function() {
+      showShareHint('tg');
+      window.open('https://t.me/', '_blank');
+    }, 800);
   }
 
   function clearAll() {
@@ -952,7 +947,7 @@ var APP = (function(){
     addTblRow:addTblRow, addTblCol:addTblCol, removeTblRow:removeTblRow, removeTblCol:removeTblCol,
     updTblH:updTblH, updTblC:updTblC, handleImg:handleImg,
     swPrev:swPrev, dlPDF:dlPDF, dlDoc:dlDoc,
-    shareWA:shareWA, shareTG:shareTG, copyUrl:copyUrl, initShareUrl:initShareUrl,
+    shareDocWA:shareDocWA, shareDocTG:shareDocTG,
     loadSample:loadSample, clearAll:clearAll
   };
 })();
@@ -963,15 +958,12 @@ function addSec(){APP.addSec();}
 function swPrev(m,b){APP.swPrev(m,b);}
 function dlPDF(){APP.dlPDF();}
 function dlDoc(){APP.dlDoc();}
-function shareWA(){APP.shareWA();}
-function shareTG(){APP.shareTG();}
-function copyUrl(){APP.copyUrl();}
+function shareDocWA(){APP.shareDocWA();}
+function shareDocTG(){APP.shareDocTG();}
 function loadSample(){APP.loadSample();}
 function clearAll(){APP.clearAll();}
 
 APP.loadSample();
-// Set the URL field once page loads
-window.addEventListener('load', function(){ APP.initShareUrl ? APP.initShareUrl() : null; });
 </script>
 </body>
 </html>
