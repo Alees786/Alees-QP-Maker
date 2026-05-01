@@ -779,11 +779,11 @@ var APP=(function(){
     imgCache={};secs=[];sid=0;qid=0;
     function ns(name,each,total,inst){sid++;return{id:sid,name:name,each:each,total:total,inst:inst,qs:[]};}
     function nq(type,data){qid++;return Object.assign({id:qid,type:type},data);}
-    var s1=ns('I. Multiple Choice Questions','1','5','Choose the correct answer.');
+    var s1=ns('I. Multiple Choice Questions','1','2','Choose the correct answer.');
     s1.qs=[nq('mcq',{text:'What does FPS stand for in animation?',opts:['Frames Per Second','Files Per Scan','Format Per Screen','Frames Per Scan'],correct:'A',marks:'1'}),nq('mcq',{text:'Which tool in Pencil2D shows ghost images of nearby frames?',opts:['Eraser','Onion Skin','Bucket Fill','Timeline'],correct:'B',marks:'1'})];
     var s2=ns('II. Match the Following','5','5','Match Column A with Column B.');
     s2.qs=[nq('match',{text:'Match the following.',pairs:[{l:'Keyframe',r:'Main frame defining movement'},{l:'Onion Skin',r:'Ghost image of nearby frames'},{l:'Unicode',r:'Universal character encoding'}],marks:'5'})];
-    var s3=ns('III. Short Answer','3','15','Answer any five. Each 3 marks.');
+    var s3=ns('III. Short Answer','3','6','Answer any five. Each 3 marks.');
     s3.qs=[nq('text',{text:'Explain the Onion Skin tool in Pencil2D.',marks:'3'}),nq('text',{text:'What is Unicode? Why is it important for Malayalam typing?',marks:'3'})];
     secs=[s1,s2,s3];renderSecs();markDirty();
   }
