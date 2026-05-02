@@ -120,10 +120,6 @@ textarea{resize:vertical;line-height:1.5}
 .ptab{padding:5px 13px;font-size:12px;border:1px solid var(--line2);border-radius:99px;cursor:pointer;background:none;color:var(--ink2);font-family:var(--ui);font-weight:600;transition:all .15s}
 .ptab.active{background:var(--green);color:#fff;border-color:var(--green)}
 
-/* ══════════════════════════════════════════════════════════
-   PAPER PREVIEW — Professional Exam Paper Typography
-   Matches: Times-style serif, tight spacing, formal layout
-══════════════════════════════════════════════════════════ */
 .paper{
   background:#fff;color:#111;
   border:1px solid #bbb;border-radius:var(--r2);
@@ -133,126 +129,31 @@ textarea{resize:vertical;line-height:1.5}
   line-height:1.35;
   overflow-x:auto;
 }
-/* School name — large, caps, bold */
-.paper .p-school{
-  text-align:center;
-  font-size:16px;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:.05em;
-  line-height:1.1;
-  margin-bottom:2px;
-}
-/* Subject line — bold, slightly smaller */
-.paper .p-subj{
-  text-align:center;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:1px;
-  line-height:1.2;
-}
-/* Exam name line */
-.paper .p-exam{
-  text-align:center;
-  font-size:11.5px;
-  font-weight:700;
-  margin-bottom:4px;
-  line-height:1.2;
-}
-/* Top divider */
+.paper .p-school{text-align:center;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;line-height:1.1;margin-bottom:2px;}
+.paper .p-subj{text-align:center;font-size:13px;font-weight:700;margin-bottom:1px;line-height:1.2;}
+.paper .p-exam{text-align:center;font-size:11.5px;font-weight:700;margin-bottom:4px;line-height:1.2;}
 .paper .p-rule{border:none;border-top:2px solid #111;margin:4px 0;}
 .paper .p-rule-thin{border:none;border-top:1px solid #555;margin:3px 0;}
-/* Meta row — two columns like screenshot */
-.paper .p-meta{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  font-size:11px;
-  line-height:1.5;
-  padding:3px 0 2px;
-}
+.paper .p-meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px;line-height:1.5;padding:3px 0 2px;}
 .paper .p-meta-left{text-align:left;}
 .paper .p-meta-right{text-align:right;}
-/* Name/Roll row */
-.paper .p-nameline{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  line-height:1.5;
-  padding:2px 0 3px;
-  border-top:1px solid #bbb;
-  margin-top:2px;
-}
-/* Instructions */
-.paper .p-ins{
-  font-size:10.5px;
-  font-style:italic;
-  margin:5px 0 6px;
-  padding:4px 8px;
-  border-left:2px solid #888;
-  background:#f8f8f8;
-  color:#333;
-  line-height:1.55;
-}
+.paper .p-nameline{display:flex;justify-content:space-between;font-size:11px;line-height:1.5;padding:2px 0 3px;border-top:1px solid #bbb;margin-top:2px;}
+.paper .p-ins{font-size:10.5px;font-style:italic;margin:5px 0 6px;padding:4px 8px;border-left:2px solid #888;background:#f8f8f8;color:#333;line-height:1.55;}
 .paper .p-ins ol{margin:2px 0 0 14px}
 .paper .p-ins li{margin-bottom:1px}
-/* Section heading */
-.paper .sec-t{
-  font-weight:700;
-  font-size:11.5px;
-  border-top:1px solid #888;
-  border-bottom:1px solid #888;
-  padding:2px 0;
-  margin:10px 0 4px;
-  text-align:center;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-}
-/* Question lines */
-.paper .q{
-  margin:3px 0 2px 0;
-  font-size:11.5px;
-  line-height:1.5;
-  display:flex;
-  gap:4px;
-}
+.paper .sec-t{font-weight:700;font-size:11.5px;border-top:1px solid #888;border-bottom:1px solid #888;padding:2px 0;margin:10px 0 4px;text-align:center;text-transform:uppercase;letter-spacing:.04em;}
+.paper .q{margin:3px 0 2px 0;font-size:11.5px;line-height:1.5;display:flex;gap:4px;}
 .paper .q-num{font-weight:700;min-width:20px;flex-shrink:0}
 .paper .q-text{flex:1}
-.paper .q-mark{
-  font-size:10px;color:#555;
-  white-space:nowrap;
-  align-self:flex-start;
-  margin-top:2px;
-  font-style:italic;
-}
-/* MCQ options — 2×2 grid like real papers */
-.paper .mcq-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0 16px;
-  margin:2px 0 3px 22px;
-  font-size:11px;
-}
+.paper .q-mark{font-size:10px;color:#555;white-space:nowrap;align-self:flex-start;margin-top:2px;font-style:italic;}
+.paper .mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin:2px 0 3px 22px;font-size:11px;}
 .paper .mcq-opt{line-height:1.5}
-/* Match table */
-.paper .match-tbl{
-  width:90%;margin:3px 0 3px 22px;
-  border-collapse:collapse;font-size:11px;
-}
-.paper .match-tbl td,.paper .match-tbl th{
-  padding:2px 8px;border:1px solid #aaa;vertical-align:top;line-height:1.4;
-}
+.paper .match-tbl{width:90%;margin:3px 0 3px 22px;border-collapse:collapse;font-size:11px;}
+.paper .match-tbl td,.paper .match-tbl th{padding:2px 8px;border:1px solid #aaa;vertical-align:top;line-height:1.4;}
 .paper .match-tbl th{background:#efefef;font-weight:700;text-align:center;}
-/* Data table */
-.paper .data-tbl{
-  width:90%;margin:3px 0 3px 22px;
-  border-collapse:collapse;font-size:11px;
-}
-.paper .data-tbl td,.paper .data-tbl th{
-  padding:2px 8px;border:1px solid #aaa;line-height:1.4;
-}
+.paper .data-tbl{width:90%;margin:3px 0 3px 22px;border-collapse:collapse;font-size:11px;}
+.paper .data-tbl td,.paper .data-tbl th{padding:2px 8px;border:1px solid #aaa;line-height:1.4;}
 .paper .data-tbl th{background:#efefef;font-weight:700;}
-/* Image in question */
 .paper .q-img{display:block;max-width:70%;margin:4px 0 2px 22px;border:1px solid #bbb;}
 .paper .ph{color:#bbb;font-style:italic}
 
@@ -758,13 +659,11 @@ function getDetails(){
 
 function buildPreview(){
   var d=getDetails();
-  /* ── Professional header matching screenshot layout ── */
   var h='';
   h+='<div class="p-school">'+esc2(d.school)+'</div>';
   h+='<div class="p-subj">'+esc2(d.subj)+'</div>';
   h+='<div class="p-exam">'+esc2(d.exam)+' &nbsp;'+esc2(d.year)+'</div>';
   h+='<hr class="p-rule">';
-  /* Two-column meta row: Class+Div left | Marks+Time right */
   h+='<div class="p-meta">';
   h+='<div class="p-meta-left">'
     +'<b>Class:</b> '+esc2(d.cls)
@@ -776,20 +675,17 @@ function buildPreview(){
     +'<b>Time:</b> '+timeLabel(d.tmin)
     +'</div>';
   h+='</div>';
-  /* Name / Roll line */
   h+='<div class="p-nameline">';
   h+='<span><b>Name:</b> ___________________________________</span>';
   h+='<span><b>Roll No.</b> __________</span>';
   h+='</div>';
   h+='<hr class="p-rule-thin">';
-  /* Instructions */
   if(d.insts.trim()){
     h+='<div class="p-ins"><b>General Instructions:</b><ol>';
     d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l){h+='<li>'+esc2(l)+'</li>';});
     h+='</ol></div>';
     h+='<hr class="p-rule-thin">';
   }
-  /* Questions */
   var qn=1;
   sections.forEach(function(sec){
     if(!sec.questions.length)return;
@@ -801,7 +697,6 @@ function buildPreview(){
         +'<span class="q-mark">('+q.marks+' mark'+(q.marks>1?'s':'')+')</span>'
         +'</div>';
       if(q.type==='mcq'){
-        /* 2-column MCQ grid like real papers */
         h+='<div class="mcq-grid">';
         ['A','B','C','D'].forEach(function(L,i){
           if(q.opts[i])h+='<div class="mcq-opt">('+L+') '+esc2(q.opts[i])+'</div>';
@@ -825,7 +720,6 @@ function buildPreview(){
     });
   });
   document.getElementById('prevFmt').innerHTML=h;
-  /* Plain text */
   var txt=d.school+'\n'+d.subj+' — '+d.exam+' '+d.year
     +'\nClass: '+d.cls+'  |  Max Marks: '+d.marks+'  |  Time: '+timeLabel(d.tmin)+'\n\n';
   var qx=1;
@@ -855,12 +749,11 @@ function swPrev(mode,btn){
 }
 function romanUpper(n){return(['I','II','III','IV','V','VI','VII','VIII','IX','X'])[n-1]||String(n);}
 
-/* ══ PDF EXPORT — matching new header style ══ */
+/* ══ PDF EXPORT ══ */
 function checkImgNote(){
   document.getElementById('imgNote').style.display=sections.some(function(s){return s.questions.some(function(q){return q.type==='image'&&q.imgData;});})?'block':'none';
 }
 
-/* Shared PDF CSS string */
 var PDF_CSS=[
   'body{font-family:"Times New Roman",Times,serif;font-size:11.5px;line-height:1.35;color:#111;margin:14mm 16mm;}',
   '.p-school{text-align:center;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;line-height:1.1;margin-bottom:2px;}',
@@ -908,6 +801,8 @@ function dlDocx(){buildPreview();var d=getDetails();generateDocx(buildDocxXml(d)
 
 function buildDocxXml(d){
   window._docxImgRefs=[];
+
+  /* ── helpers ── */
   function para(text,opts){
     opts=opts||{};
     return'<w:p><w:pPr>'
@@ -919,29 +814,105 @@ function buildDocxXml(d){
       +'<w:sz w:val="'+(opts.sz||22)+'"/>'
       +'</w:rPr><w:t xml:space="preserve">'+xmlEsc(text)+'</w:t></w:r></w:p>';
   }
-  function hRule(thick){return'<w:p><w:pPr><w:spacing w:after="0"/><w:pBdr><w:bottom w:val="single" w:sz="'+(thick?12:6)+'" w:space="1" w:color="111111"/></w:pBdr></w:pPr></w:p>';}
-  function paraRight(leftText,rightText,sz){
-    sz=sz||20;
-    return'<w:p><w:pPr><w:spacing w:after="0"/></w:pPr>'
-      +'<w:r><w:rPr><w:b/><w:sz w:val="'+sz+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(leftText)+'</w:t></w:r>'
-      +'<w:r><w:rPr><w:sz w:val="'+sz+'"/></w:rPr><w:tab/></w:r>'
-      +'<w:r><w:rPr><w:b/><w:sz w:val="'+sz+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(rightText)+'</w:t></w:r>'
+  function hRule(thick){
+    return'<w:p><w:pPr><w:spacing w:after="0"/><w:pBdr><w:bottom w:val="single" w:sz="'+(thick?12:6)+'" w:space="1" w:color="111111"/></w:pBdr></w:pPr></w:p>';
+  }
+
+  /* No-border spec reused for both tables */
+  var NB='<w:top w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
+        +'<w:left w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
+        +'<w:bottom w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
+        +'<w:right w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
+        +'<w:insideH w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
+        +'<w:insideV w:val="none" w:sz="0" w:space="0" w:color="auto"/>';
+
+  /* Build a table cell with given inner XML and width in DXA */
+  function tc(innerXml, w){
+    return'<w:tc>'
+      +'<w:tcPr>'
+      +'<w:tcW w:w="'+w+'" w:type="dxa"/>'
+      +'<w:tcBorders>'+NB+'</w:tcBorders>'
+      +'<w:tcMar>'
+      +'<w:top w:w="0" w:type="dxa"/>'
+      +'<w:bottom w:w="0" w:type="dxa"/>'
+      +'<w:left w:w="80" w:type="dxa"/>'
+      +'<w:right w:w="80" w:type="dxa"/>'
+      +'</w:tcMar>'
+      +'</w:tcPr>'
+      +innerXml
+      +'</w:tc>';
+  }
+
+  /* A paragraph inside a table cell: runs = raw w:r XML string, jc = optional alignment */
+  function tcp(runs, jc){
+    return'<w:p>'
+      +'<w:pPr><w:spacing w:after="0" w:before="0"/>'+(jc?'<w:jc w:val="'+jc+'"/>':'')+'</w:pPr>'
+      +runs
       +'</w:p>';
   }
+
+  /* Bold run and normal run helpers */
+  function br(txt, sz){ return'<w:r><w:rPr><w:b/><w:sz w:val="'+(sz||20)+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(txt)+'</w:t></w:r>'; }
+  function nr(txt, sz){ return'<w:r><w:rPr><w:sz w:val="'+(sz||20)+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(txt)+'</w:t></w:r>'; }
+
+  /* ── Document body ── */
   var body='';
-  /* Header */
+
+  /* Title block */
   body+=para(d.school,{bold:true,caps:true,center:true,sz:28,spBefore:'0'});
   body+=para(d.subj,{bold:true,center:true,sz:24});
   body+=para(d.exam+' — '+d.year,{bold:true,center:true,sz:22});
   body+=hRule(true);
-  /* Meta row */
-  var leftMeta='Class: '+d.cls+(d.setv?'     Div: '+d.setv:'')+(d.edate?'\nDate: '+d.edate:'');
-  var rightMeta='Max. Mark: '+d.marks+'\nTime: '+timeLabel(d.tmin);
-  body+=para(leftMeta+'          '+rightMeta,{sz:20});
-  /* Name line */
-  body+=para('Name: ________________________________     Roll No. __________',{sz:20});
+
+  /* ── Meta row: 2-column borderless table (left=Class/Div/Date, right=Marks/Time) ── */
+  /* Total content width: A4 11906 - left 900 - right 900 = 10106 DXA */
+  var TW=10106, LC=6060, RC=4046;
+
+  var leftRows='';
+  leftRows += tcp( br('Class: ')+nr(d.cls)+(d.setv ? nr('    ')+br('Div: ')+nr(d.setv) : '') );
+  if(d.edate){ leftRows += tcp( br('Date: ')+nr(d.edate) ); }
+
+  var rightRows='';
+  rightRows += tcp( br('Max. Mark: ')+nr(d.marks), 'right' );
+  rightRows += tcp( br('Time: ')+nr(timeLabel(d.tmin)), 'right' );
+
+  body+='<w:tbl>'
+    +'<w:tblPr>'
+    +'<w:tblW w:w="'+TW+'" w:type="dxa"/>'
+    +'<w:tblBorders>'+NB+'</w:tblBorders>'
+    +'<w:tblCellMar>'
+    +'<w:top w:w="40" w:type="dxa"/>'
+    +'<w:bottom w:w="40" w:type="dxa"/>'
+    +'<w:left w:w="0" w:type="dxa"/>'
+    +'<w:right w:w="0" w:type="dxa"/>'
+    +'</w:tblCellMar>'
+    +'</w:tblPr>'
+    +'<w:tblGrid><w:gridCol w:w="'+LC+'"/><w:gridCol w:w="'+RC+'"/></w:tblGrid>'
+    +'<w:tr>'+tc(leftRows,LC)+tc(rightRows,RC)+'</w:tr>'
+    +'</w:tbl>';
+
+  /* ── Name / Roll No row: another 2-column borderless table ── */
+  var nameRows = tcp( br('Name: ')+nr('________________________________') );
+  var rollRows = tcp( br('Roll No. ')+nr('__________') );
+
+  body+='<w:tbl>'
+    +'<w:tblPr>'
+    +'<w:tblW w:w="'+TW+'" w:type="dxa"/>'
+    +'<w:tblBorders>'+NB+'</w:tblBorders>'
+    +'<w:tblCellMar>'
+    +'<w:top w:w="60" w:type="dxa"/>'
+    +'<w:bottom w:w="60" w:type="dxa"/>'
+    +'<w:left w:w="0" w:type="dxa"/>'
+    +'<w:right w:w="0" w:type="dxa"/>'
+    +'</w:tblCellMar>'
+    +'</w:tblPr>'
+    +'<w:tblGrid><w:gridCol w:w="'+LC+'"/><w:gridCol w:w="'+RC+'"/></w:tblGrid>'
+    +'<w:tr>'+tc(nameRows,LC)+tc(rollRows,RC)+'</w:tr>'
+    +'</w:tbl>';
+
   body+=hRule(false);
-  /* Instructions */
+
+  /* ── Instructions ── */
   if(d.insts.trim()){
     body+=para('General Instructions:',{bold:true,sz:19});
     d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){
@@ -949,7 +920,8 @@ function buildDocxXml(d){
     });
     body+=hRule(false);
   }
-  /* Questions */
+
+  /* ── Questions ── */
   var qn=1;
   sections.forEach(function(sec){
     if(!sec.questions.length)return;
@@ -989,6 +961,7 @@ function buildDocxXml(d){
       qn++;
     });
   });
+
   return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" '
     +'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
@@ -997,6 +970,7 @@ function buildDocxXml(d){
     +'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900"/></w:sectPr>'
     +'</w:body></w:document>';
 }
+
 function buildAndEmbedImages(zip,imgRefs){
   var rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
   var mf=zip.folder('word/media');
