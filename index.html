@@ -173,23 +173,21 @@ textarea{resize:vertical;line-height:1.5}
 .share-dl-btn{width:100%;padding:11px 14px;border-radius:var(--r);background:var(--green);color:#fff;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .share-dl-btn:hover{background:var(--green-dk)}
 .share-dl-btn:active{transform:scale(.98)}
+.share-dl-btn:disabled{opacity:.6;cursor:not-allowed}
 .share-ready-badge{display:none;align-items:center;gap:6px;padding:7px 11px;background:var(--green-lt);border:1px solid rgba(15,110,86,.25);border-radius:var(--r);font-size:12px;font-weight:700;color:var(--green-dk);margin-bottom:10px}
 .share-ready-badge.show{display:flex}
 .share-divider{display:flex;align-items:center;gap:8px;margin:12px 0}
 .share-divider span{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
 .share-divider::before,.share-divider::after{content:'';flex:1;height:1px;background:var(--line)}
 .share-app-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.share-app-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--r);border:1px solid var(--line2);background:var(--paper);cursor:pointer;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;transition:all .15s;font-family:var(--ui)}
+.share-app-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--r);border:1px solid var(--line2);background:var(--paper);cursor:pointer;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;transition:all .15s;font-family:var(--ui);-webkit-tap-highlight-color:transparent}
 .share-app-btn:hover{border-color:var(--green);background:var(--green-lt);color:var(--green-dk)}
 .share-app-btn:active{transform:scale(.97)}
 .app-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .app-name{font-size:12px;font-weight:700}
 .app-sub{font-size:10px;color:var(--ink3);font-weight:400;margin-top:1px}
-.device-badge{display:inline-block;font-size:9px;padding:1px 5px;border-radius:99px;font-weight:700;margin-left:4px;vertical-align:middle}
-.device-badge.mobile{background:#dcfce7;color:#166534}
-.device-badge.web{background:#dbeafe;color:#1e40af}
-.share-info{background:var(--amber-lt);border:1px solid rgba(139,90,0,.2);border-radius:var(--r);padding:8px 11px;font-size:11px;color:var(--amber);line-height:1.6}
-.share-info b{color:var(--ink2)}
+.device-tip{background:var(--amber-lt);border:1px solid rgba(139,90,0,.2);border-radius:var(--r);padding:8px 11px;font-size:11px;color:var(--amber);line-height:1.6}
+.device-tip b{color:var(--ink2)}
 
 #adminOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;overflow-y:auto;padding:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:99px;font-size:12px;font-weight:600;z-index:2000;transition:transform .25s ease,opacity .25s ease;opacity:0;white-space:nowrap;pointer-events:none}
@@ -275,7 +273,7 @@ textarea{resize:vertical;line-height:1.5}
       <option>Information and Communication Technology</option><option>Hindi</option>
       <option>Malayalam</option><option>Mathematics</option><option>Basic Science</option>
       <option>Social Science</option><option>English</option><option>IT</option>
-      <option>Islamic Studies</option><option>Hindi</option><option>Other (type below)</option>
+      <option>Islamic Studies</option><option>Other (type below)</option>
     </select>
   </div>
   <div class="field" id="subjCW" style="display:none"><label>Custom Subject</label><input type="text" id="subjC" placeholder="e.g. Chemistry"></div>
@@ -283,8 +281,7 @@ textarea{resize:vertical;line-height:1.5}
     <div class="field"><label>Class</label>
       <select id="cls">
         <option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option>
-        <option selected>VI</option><option>VII</option><option>VIII</option><option>IX</option>
-        <option>X</option>
+        <option selected>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option>
       </select>
     </div>
     <div class="field"><label>Max Marks</label><input type="number" id="marks" value="60" min="1"></div>
@@ -306,8 +303,6 @@ Answers must be written in the answer booklet provided.</textarea>
     <button class="btn btn-primary" style="padding:10px 24px" onclick="goStep(1)">Continue to Questions →</button>
   </div>
 </div>
-
-
 
 <!-- Panel 1: Questions -->
 <div class="panel" data-panel="1">
@@ -354,21 +349,24 @@ Answers must be written in the answer booklet provided.</textarea>
 
   <div class="sep-lbl" style="margin-top:16px">Share via App</div>
   <div class="share-box">
+    <!-- Step 1 -->
     <div class="share-step-lbl">Step 1 — Prepare &amp; Download your file</div>
-    <button class="share-dl-btn" onclick="APP.prepareShare()">
+    <button class="share-dl-btn" id="prepBtn" onclick="APP.prepareShare()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Prepare &amp; Download DOCX
     </button>
     <div class="share-ready-badge" id="shareReadyBadge">
-      ✓ File ready — <span id="shareReadyName" style="font-family:var(--mono);font-size:11px;margin-left:4px"></span>
+      ✓ File downloaded — <span id="shareReadyName" style="font-family:var(--mono);font-size:11px;margin-left:2px"></span>
     </div>
     <div id="preparingMsg" style="display:none;font-size:12px;color:var(--ink3);padding:4px 0 8px">⏳ Building your file…</div>
 
-    <div class="share-divider"><span>Step 2 — Open app &amp; attach downloaded file</span></div>
-
+    <!-- Step 2 -->
+    <div class="share-divider"><span>Step 2 — Open your app &amp; attach the file</span></div>
     <div class="share-step-lbl" id="shareDeviceLbl">Open app to share</div>
-    <div class="share-app-grid" id="shareAppGrid"></div>
-    <div class="share-info" id="shareInfoBox"></div>
+    <div class="share-app-grid" id="shareAppGrid">
+      <!-- rendered by JS -->
+    </div>
+    <div class="device-tip" id="shareInfoBox"><!-- rendered by JS --></div>
   </div>
 
   <div class="nav">
@@ -379,7 +377,6 @@ Answers must be written in the answer booklet provided.</textarea>
     <button class="btn-ghost" onclick="clearAll()" style="border:1px solid var(--line2);color:var(--red)">🗑 Clear all &amp; reset</button>
   </div>
 </div>
-
 </div><!-- /wrap -->
 
 <!-- Saves modal -->
@@ -400,80 +397,65 @@ Answers must be written in the answer booklet provided.</textarea>
 /* ═══════════════════════════════════
    DEVICE DETECTION
 ═══════════════════════════════════ */
-var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+var UA = navigator.userAgent || '';
+var isAndroid = /Android/i.test(UA);
+var isIOS     = /iPhone|iPad|iPod/i.test(UA);
+var isMobile  = isAndroid || isIOS;
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2600);
+}
 
 /* ═══════════════════════════════════
    RENDER SHARE BUTTONS
-   Mobile → native app deep-link
-   Desktop → web URL
 ═══════════════════════════════════ */
-function renderShareButtons() {
+function renderShareButtons(){
   var grid = document.getElementById('shareAppGrid');
   var info = document.getElementById('shareInfoBox');
   var lbl  = document.getElementById('shareDeviceLbl');
 
   var apps = [
-    {
-      bg:'#25D366', emoji:'💬', name:'WhatsApp',
-      mobileUrl:'whatsapp://',
-      webUrl:'https://web.whatsapp.com',
-      mobileSub:'Opens WhatsApp app',
-      webSub:'web.whatsapp.com'
-    },
-    {
-      bg:'#2AABEE', emoji:'✈️', name:'Telegram',
-      mobileUrl:'tg://',
-      webUrl:'https://web.telegram.org',
-      mobileSub:'Opens Telegram app',
-      webSub:'web.telegram.org'
-    },
-    {
-      bg:'#EA4335', emoji:'📧', name:'Gmail',
-      mobileUrl:'googlegmail://',
-      webUrl:'',
-      mobileSub:'Opens Gmail / Mail app',
-      webSub:'mail.google.com'
-    },
-    {
-      bg:'#6B7280', emoji:'📤', name:'More Apps',
-      mobileUrl:'__native__',
-      webUrl:'__copy__',
-      mobileSub:'Phone share sheet',
-      webSub:'Copy / other options'
-    }
+    { id:'wa',  bg:'#25D366', emoji:'💬', name:'WhatsApp',
+      mobileSub: isAndroid ? 'Opens WhatsApp app' : 'Opens WhatsApp',
+      webSub: 'web.whatsapp.com' },
+    { id:'tg',  bg:'#2AABEE', emoji:'✈️', name:'Telegram',
+      mobileSub:'Opens Telegram app', webSub:'web.telegram.org' },
+    { id:'gm',  bg:'#EA4335', emoji:'📧', name:'Gmail',
+      mobileSub:'Opens Gmail / Mail', webSub:'mail.google.com' },
+    { id:'more',bg:'#6B7280', emoji:'📤', name:'More Apps',
+      mobileSub:'Phone share sheet', webSub:'Copy / other options' }
   ];
 
-  var html = apps.map(function(a) {
+  var html = apps.map(function(a){
     var sub = isMobile ? a.mobileSub : a.webSub;
-    var badge = isMobile
-      ? '<span class="device-badge mobile">App</span>'
-      : '<span class="device-badge web">Web</span>';
-    return '<button class="share-app-btn" onclick="APP.openShareApp(\''+a.name+'\')">'
-      + '<div class="app-icon" style="background:'+a.bg+'">'+a.emoji+'</div>'
-      + '<div>'
-      + '<div class="app-name">'+a.name+badge+'</div>'
-      + '<div class="app-sub">'+sub+'</div>'
-      + '</div>'
-      + '</button>';
+    return '<button class="share-app-btn" onclick="APP.openShareApp(\''+a.id+'\')">'
+      +'<div class="app-icon" style="background:'+a.bg+'">'+a.emoji+'</div>'
+      +'<div><div class="app-name">'+a.name+'</div>'
+      +'<div class="app-sub">'+sub+'</div>'
+      +'</div></button>';
   }).join('');
   grid.innerHTML = html;
 
-  lbl.textContent = isMobile
-    ? 'Open app on your phone 📱'
-    : 'Open in browser 🖥️';
+  lbl.textContent = isMobile ? 'Open app on your phone 📱' : 'Open in browser 🖥️';
 
-  if(isMobile) {
-    info.innerHTML = '<b>📱 Mobile detected!</b> Tap an app button — it opens the <b>installed app directly</b>. '
-      + 'Then tap the 📎 Attach button → Document → pick the downloaded file from Downloads.<br><br>'
-      + '<b>WhatsApp:</b> 📎 → Document → Downloads<br>'
-      + '<b>Telegram:</b> 📎 → File → Downloads<br>'
-      + '<b>Gmail:</b> 📎 → Attach file → Downloads';
+  if(isMobile){
+    info.innerHTML = '<b>📱 Mobile instructions:</b><br>'
+      +'1. Tap <b>Prepare &amp; Download DOCX</b> first — file saves to Downloads.<br>'
+      +'2. Tap WhatsApp / Telegram button below — app opens directly.<br>'
+      +'3. Inside the app: tap 📎 Attach → Document → select the file from Downloads.<br><br>'
+      +'<b>WhatsApp:</b> 📎 → Document → Downloads<br>'
+      +'<b>Telegram:</b> 📎 → File → Downloads<br>'
+      +'<b>Gmail:</b> 📎 paperclip → Attach file → Downloads';
   } else {
-    info.innerHTML = '<b>🖥️ Desktop detected.</b> Buttons open the <b>web versions</b> in a new tab. '
-      + 'Once open, use the attach / clip icon to attach your downloaded DOCX file from Downloads.<br><br>'
-      + '<b>WhatsApp Web:</b> Click 📎 → Document<br>'
-      + '<b>Telegram Web:</b> Click 📎 → File<br>'
-      + '<b>Gmail:</b> Click the 📎 paperclip icon';
+    info.innerHTML = '<b>🖥️ Desktop instructions:</b><br>'
+      +'1. Tap <b>Prepare &amp; Download DOCX</b> — file saves to Downloads folder.<br>'
+      +'2. Click WhatsApp / Telegram / Gmail below — web version opens in new tab.<br>'
+      +'3. In the web app: use the 📎 attach icon to upload from your Downloads folder.';
   }
 }
 
@@ -536,15 +518,6 @@ var APP_CREDIT=(function(){
 })();
 
 /* ═══════════════════════════════════
-   TOAST
-═══════════════════════════════════ */
-function showToast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2400);
-}
-
-/* ═══════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════ */
 var curStep=0;
@@ -552,11 +525,15 @@ function goStep(n){
   if(n===2)buildPreview();
   if(n===3)checkImgNote();
   document.querySelectorAll('.panel').forEach(function(p,i){p.classList.toggle('active',i===n);});
-  document.querySelectorAll('.step').forEach(function(s,i){s.classList.toggle('active',i===n);s.classList.toggle('done',i<n);});
+  document.querySelectorAll('.step').forEach(function(s,i){
+    s.classList.toggle('active',i===n);
+    s.classList.toggle('done',i<n);
+    var sn=s.querySelector('.snum');
+    if(sn)sn.textContent=i<n?'✓':(i+1);
+  });
   curStep=n;window.scrollTo({top:0,behavior:'smooth'});
   APP.scheduleSave();
 }
-
 function subjChg(){
   document.getElementById('subjCW').style.display=document.getElementById('subj').value==='Other (type below)'?'block':'none';
 }
@@ -565,7 +542,6 @@ function subjChg(){
    SECTIONS & QUESTIONS
 ═══════════════════════════════════ */
 var sections=[],secIdCounter=0,qIdCounter=0;
-
 function addSec(title){
   var id='sec_'+(++secIdCounter);
   var sec={id:id,title:title||('Section '+(sections.length+1)),questions:[]};
@@ -574,7 +550,6 @@ function addSec(title){
   div.className='sec';div.id='sec_'+sec.id;div.innerHTML=secHtml(sec);c.appendChild(div);
   APP.scheduleSave();
 }
-
 function secHtml(sec){
   return '<div class="sec-hdr"><input type="text" value="'+esc(sec.title)+'" onchange="secRename(\''+sec.id+'\',this.value)" placeholder="Section title"><button class="btn-del" onclick="delSec(\''+sec.id+'\')">✕ Remove</button></div>'
     +'<div id="qs_'+sec.id+'"></div>'
@@ -592,7 +567,6 @@ function delSec(sid){
   sections=sections.filter(function(s){return s.id!==sid;});
   var el=document.getElementById('sec_'+sid);if(el)el.remove();APP.scheduleSave();
 }
-
 function addQ(sid,type){
   var sec=sections.find(function(s){return s.id===sid;});if(!sec)return;
   var id='q_'+(++qIdCounter);
@@ -607,15 +581,16 @@ function addQ(sid,type){
   if(type==='image'){var fi=div.querySelector('input[type=file]');if(fi)fi.addEventListener('change',function(e){imgUpload(q.id,e);});}
   APP.scheduleSave();
 }
-
 var typeLabels={text:'Text/Long Answer',mcq:'MCQ',match:'Match the Following',table:'Data Table',image:'Image Question'};
-
 function qHtml(sid,q){
-  var h='<div class="q-item-hdr"><span class="q-num-b">Q</span><span class="q-type-tag tag-'+q.type+'">'+(typeLabels[q.type]||q.type)+'</span><div style="flex:1"></div>'
+  var h='<div class="q-item-hdr"><span class="q-num-b">Q</span>'
+    +'<span class="q-type-tag tag-'+q.type+'">'+(typeLabels[q.type]||q.type)+'</span>'
+    +'<div style="flex:1"></div>'
     +'<input type="number" value="'+q.marks+'" min="1" max="99" style="width:48px;font-size:11px;padding:3px 5px;margin-right:4px" onchange="qSetMarks(\''+q.id+'\',this.value)">'
     +'<span style="font-size:10px;color:var(--ink3)">mark(s)</span>'
     +'<button class="btn-del" onclick="delQ(\''+sid+'\',\''+q.id+'\')">✕</button></div>';
-  h+='<div class="q-body"><div class="field"><label>Question text</label><textarea rows="2" onchange="qSetText(\''+q.id+'\',this.value)" placeholder="Enter question…">'+esc(q.text)+'</textarea></div>';
+  h+='<div class="q-body"><div class="field"><label>Question text</label>'
+    +'<textarea rows="2" onchange="qSetText(\''+q.id+'\',this.value)" placeholder="Enter question…">'+esc(q.text)+'</textarea></div>';
   if(q.type==='mcq'){
     h+='<div class="mcq-opts">';
     ['A','B','C','D'].forEach(function(L,i){h+='<div class="mcq-opt-row"><span class="mcq-opt-label">('+L+')</span><input type="text" value="'+esc(q.opts[i]||'')+'" placeholder="Option '+L+'" onchange="qSetOpt(\''+q.id+'\','+i+',this.value)"></div>';});
@@ -633,14 +608,12 @@ function qHtml(sid,q){
   }
   h+='</div>';return h;
 }
-
 function pairRowHtml(qid,i,p){
   return '<div class="g2" style="margin-bottom:5px" id="pair_'+qid+'_'+i+'">'
     +'<input type="text" value="'+esc(p.l||'')+'" placeholder="Left '+(i+1)+'" onchange="setPair(\''+qid+'\','+i+',\'l\',this.value)">'
     +'<div style="display:flex;gap:4px"><input type="text" value="'+esc(p.r||'')+'" placeholder="Right '+(i+1)+'" onchange="setPair(\''+qid+'\','+i+',\'r\',this.value)" style="flex:1">'
     +'<button class="btn-del" onclick="delPair(\''+qid+'\','+i+')">✕</button></div></div>';
 }
-
 function tableEditorHtml(q){
   var h='<div class="tbl-editor"><table><thead><tr>';
   for(var c=0;c<q.headers.length;c++)h+='<th><input type="text" value="'+esc(q.headers[c])+'" onchange="tblSetHeader(\''+q.id+'\','+c+',this.value)"></th>';
@@ -656,7 +629,6 @@ function tableEditorHtml(q){
     +'<button class="btn-ghost" style="font-size:11px;border:1px solid var(--line2);color:var(--red)" onclick="tblDelRow(\''+q.id+'\')">- Row</button>'
     +'<button class="btn-ghost" style="font-size:11px;border:1px solid var(--line2);color:var(--red)" onclick="tblDelCol(\''+q.id+'\')">- Column</button></div>';
 }
-
 function findQ(qid){for(var i=0;i<sections.length;i++){for(var j=0;j<sections[i].questions.length;j++){if(sections[i].questions[j].id===qid)return sections[i].questions[j];}}return null;}
 function qSetText(qid,v){var q=findQ(qid);if(q)q.text=v;APP.scheduleSave();}
 function qSetMarks(qid,v){var q=findQ(qid);if(q)q.marks=parseInt(v)||1;APP.scheduleSave();}
@@ -701,22 +673,33 @@ function imgUpload(qid,e){
 ═══════════════════════════════════ */
 function getDetails(){
   return{
-    school:document.getElementById('school').value,year:document.getElementById('year').value,
+    school:document.getElementById('school').value,
+    year:document.getElementById('year').value,
     exam:document.getElementById('exam').value,
     subj:document.getElementById('subj').value==='Other (type below)'?document.getElementById('subjC').value:document.getElementById('subj').value,
-    cls:document.getElementById('cls').value,marks:document.getElementById('marks').value,
-    tmin:document.getElementById('tmin').value,setv:document.getElementById('setv').value,
-    edate:document.getElementById('edate').value,insts:document.getElementById('insts').value
+    cls:document.getElementById('cls').value,
+    marks:document.getElementById('marks').value,
+    tmin:document.getElementById('tmin').value,
+    setv:document.getElementById('setv').value,
+    edate:document.getElementById('edate').value,
+    insts:document.getElementById('insts').value
   };
 }
 function buildPreview(){
   var d=getDetails();
-  var h='<div class="sch">'+esc2(d.school)+'</div><div class="ex">'+esc2(d.exam)+' — '+esc2(d.year)+'</div><hr>';
-  h+='<div class="meta"><span><b>Subject:</b> '+esc2(d.subj)+'</span><span><b>Class:</b> '+esc2(d.cls)+'</span><span><b>Max Marks:</b> '+esc2(d.marks)+'</span><span><b>Time:</b> '+esc2(d.tmin)+' min</span>';
+  var h='<div class="sch">'+esc2(d.school)+'</div>'
+    +'<div class="sch">'+esc2(d.subj)+'</div>'
+    +'<div class="ex">'+esc2(d.exam)+' — '+esc2(d.year)+'</div><hr>';
+  h+='<div class="meta"><span><b>Subject:</b> '+esc2(d.subj)+'</span><span><b>Class:</b> '+esc2(d.cls)+'</span>'
+    +'<span><b>Max Marks:</b> '+esc2(d.marks)+'</span><span><b>Time:</b> '+esc2(d.tmin)+' min</span>';
   if(d.setv)h+='<span><b>Set:</b> '+esc2(d.setv)+'</span>';
   if(d.edate)h+='<span><b>Date:</b> '+esc2(d.edate)+'</span>';
-  h+='</div><div class="nml">Name: _________________________ &nbsp;&nbsp; Roll No: _______ &nbsp;&nbsp; Section: _____</div>';
-  if(d.insts.trim()){h+='<div class="ins"><b>General Instructions:</b><ol>';d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l){h+='<li>'+esc2(l)+'</li>';});h+='</ol></div>';}
+  h+='</div><div class="nml">Name: __________________________________________ &nbsp;&nbsp; Roll No: _______ &nbsp;&nbsp; Section: _____</div>';
+  if(d.insts.trim()){
+    h+='<div class="ins"><b>General Instructions:</b><ol>';
+    d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l){h+='<li>'+esc2(l)+'</li>';});
+    h+='</ol></div>';
+  }
   h+='<hr>';
   var qn=1;
   sections.forEach(function(sec){
@@ -731,8 +714,11 @@ function buildPreview(){
         h+='</tbody></table>';
       }
       if(q.type==='table'){
-        h+='<table class="data-tbl"><thead><tr>';q.headers.forEach(function(hd){h+='<th>'+esc2(hd)+'</th>';});h+='</tr></thead><tbody>';
-        q.rows.forEach(function(row){h+='<tr>';row.forEach(function(c){h+='<td>'+esc2(c)+'</td>';});h+='</tr>';});h+='</tbody></table>';
+        h+='<table class="data-tbl"><thead><tr>';
+        q.headers.forEach(function(hd){h+='<th>'+esc2(hd)+'</th>';});
+        h+='</tr></thead><tbody>';
+        q.rows.forEach(function(row){h+='<tr>';row.forEach(function(c){h+='<td>'+esc2(c)+'</td>';});h+='</tr>';});
+        h+='</tbody></table>';
       }
       if(q.type==='image'&&q.imgData)h+='<img class="q-img" src="'+q.imgData+'" alt="">';
       qn++;
@@ -771,7 +757,23 @@ function dlPDF(){
   var d=getDetails(),content=document.getElementById('prevFmt').innerHTML;
   var w=window.open('','_blank');
   if(!w){showToast('⚠️ Allow pop-ups and try again');return;}
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+d.subj+' Paper</title><style>body{font-family:Georgia,serif;font-size:12px;line-height:1.7;color:#111;margin:20mm 18mm;}.sch{text-align:center;font-size:14px;font-weight:bold}.ex{text-align:center;font-size:12px;font-weight:bold;margin:2px 0}hr{border:none;border-top:1.5px solid #111;margin:7px 0}.meta{display:flex;flex-wrap:wrap;justify-content:space-between;font-size:11px;gap:3px}.nml{font-size:11px;margin:4px 0}.ins{font-size:10.5px;font-style:italic;margin:5px 0 8px;padding:5px 8px;border-left:2px solid #bbb;background:#fafafa;color:#333}.ins ol{margin:3px 0 0 14px}.sec-t{font-weight:bold;font-size:12px;border-bottom:1px solid #ccc;padding-bottom:2px;margin:12px 0 4px}.q{margin:4px 0 4px 14px;font-size:12px}.mcq-opt{margin-left:28px;font-size:11.5px}.match-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}.match-tbl td,.match-tbl th{padding:3px 8px;border:1px solid #ccc}.match-tbl th{background:#f0f0f0;font-weight:bold}.data-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}.data-tbl td,.data-tbl th{padding:3px 8px;border:1px solid #ccc}.data-tbl th{background:#f0f0f0;font-weight:bold}.q-img{display:block;max-width:75%;margin:5px 0 3px 14px;border:1px solid #ccc}.ph{color:#bbb}@media print{body{margin:10mm 12mm}}</style></head><body>'+content+'</body></html>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+d.subj+' Paper</title>'
+    +'<style>body{font-family:Georgia,serif;font-size:12px;line-height:1.7;color:#111;margin:20mm 18mm}'
+    +'.sch{text-align:center;font-size:14px;font-weight:bold}.ex{text-align:center;font-size:12px;font-weight:bold;margin:2px 0}'
+    +'hr{border:none;border-top:1.5px solid #111;margin:7px 0}'
+    +'.meta{display:flex;flex-wrap:wrap;justify-content:space-between;font-size:11px;gap:3px}'
+    +'.nml{font-size:11px;margin:4px 0}'
+    +'.ins{font-size:10.5px;font-style:italic;margin:5px 0 8px;padding:5px 8px;border-left:2px solid #bbb;background:#fafafa;color:#333}'
+    +'.ins ol{margin:3px 0 0 14px}'
+    +'.sec-t{font-weight:bold;font-size:12px;border-bottom:1px solid #ccc;padding-bottom:2px;margin:12px 0 4px}'
+    +'.q{margin:4px 0 4px 14px;font-size:12px}.mcq-opt{margin-left:28px;font-size:11.5px}'
+    +'.match-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}'
+    +'.match-tbl td,.match-tbl th{padding:3px 8px;border:1px solid #ccc}.match-tbl th{background:#f0f0f0;font-weight:bold}'
+    +'.data-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}'
+    +'.data-tbl td,.data-tbl th{padding:3px 8px;border:1px solid #ccc}.data-tbl th{background:#f0f0f0;font-weight:bold}'
+    +'.q-img{display:block;max-width:75%;margin:5px 0 3px 14px;border:1px solid #ccc}.ph{color:#bbb}'
+    +'@media print{body{margin:10mm 12mm}}'
+    +'</style></head><body>'+content+'</body></html>');
   w.document.close();w.focus();
   var imgs=w.document.images;
   if(!imgs.length){setTimeout(function(){w.print();},400);}
@@ -787,18 +789,27 @@ function buildDocxXml(d){
   window._docxImgRefs=[];
   function para(text,opts){
     opts=opts||{};
-    return '<w:p><w:pPr>'+(opts.center?'<w:jc w:val="center"/>':'')+(opts.spBefore?'<w:spacing w:before="'+opts.spBefore+'"/>':'')+'</w:pPr><w:r><w:rPr>'+(opts.bold?'<w:b/>':'')+'<w:sz w:val="'+(opts.sz||22)+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(text)+'</w:t></w:r></w:p>';
+    return '<w:p><w:pPr>'
+      +(opts.center?'<w:jc w:val="center"/>':'')
+      +(opts.spBefore?'<w:spacing w:before="'+opts.spBefore+'"/>':'')
+      +'</w:pPr><w:r><w:rPr>'
+      +(opts.bold?'<w:b/>':'')
+      +'<w:sz w:val="'+(opts.sz||22)+'"/>'
+      +'</w:rPr><w:t xml:space="preserve">'+xmlEsc(text)+'</w:t></w:r></w:p>';
   }
   function hRule(){return'<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="111111"/></w:pBdr></w:pPr></w:p>';}
   var body='';
   body+=para(d.school,{bold:true,center:true,sz:26});
   body+=para(d.exam+' — '+d.year,{bold:true,center:true,sz:22});
-  body+=para('Subject: '+d.subj+', {bold:true,center:true,sz:22});
+  body+=para('Subject: '+d.subj,{bold:true,center:true,sz:22});
   body+=hRule();
-  body+=para( Class: '+d.cls+'   |   Max Marks: '+d.marks+'   |   Time: '+d.tmin+' min',{sz:20});
-  if(d.setv||d.edate)body+=para((d.setv?'Set: '+d.setv+'   ':'')+( d.edate?'Date: '+d.edate:''),{sz:20});
-  body+=para('Name: ________________________   Roll No: _______   Section: _____',{sz:20});
-  if(d.insts.trim()){body+=para('General Instructions:',{bold:true,sz:20});d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){body+=para((i+1)+'. '+l,{sz:18});});}
+  body+=para('Class: '+d.cls+'   |   Max Marks: '+d.marks+'   |   Time: '+d.tmin+' min',{sz:20});
+  if(d.setv||d.edate)body+=para((d.setv?'Set: '+d.setv+'   ':'')+(d.edate?'Date: '+d.edate:''),{sz:20});
+  body+=para('Name: _______________________________________   Roll No: _______   Section: _____',{sz:20});
+  if(d.insts.trim()){
+    body+=para('General Instructions:',{bold:true,sz:20});
+    d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){body+=para((i+1)+'. '+l,{sz:18});});
+  }
   body+=hRule();
   var qn=1;
   sections.forEach(function(sec){
@@ -807,17 +818,41 @@ function buildDocxXml(d){
     sec.questions.forEach(function(q){
       body+=para(qn+'. '+(q.text||'(no text)')+' ['+q.marks+' mark'+(q.marks>1?'s':'')+']',{sz:20});
       if(q.type==='mcq')['A','B','C','D'].forEach(function(L,i){if(q.opts[i])body+=para('   ('+L+') '+q.opts[i],{sz:19});});
-      if(q.type==='match'&&q.pairs.length){body+=para('Column A                        Column B',{bold:true,sz:19});q.pairs.forEach(function(p,i){body+=para('  '+(i+1)+'. '+(p.l||'')+'       '+romanUpper(i+1)+'. '+(p.r||''),{sz:19});});}
-      if(q.type==='table'){body+=para(q.headers.join('  |  '),{bold:true,sz:19});q.rows.forEach(function(row){body+=para(row.join('  |  '),{sz:19});});}
+      if(q.type==='match'&&q.pairs.length){
+        body+=para('Column A                        Column B',{bold:true,sz:19});
+        q.pairs.forEach(function(p,i){body+=para('  '+(i+1)+'. '+(p.l||'')+'       '+romanUpper(i+1)+'. '+(p.r||''),{sz:19});});
+      }
+      if(q.type==='table'){
+        body+=para(q.headers.join('  |  '),{bold:true,sz:19});
+        q.rows.forEach(function(row){body+=para(row.join('  |  '),{sz:19});});
+      }
       if(q.type==='image'&&q.imgData){
         var rId='rImg'+window._docxImgRefs.length,idx=window._docxImgRefs.length+1;
         window._docxImgRefs.push({rId:rId,data:q.imgData});
-        body+='<w:p><w:r><w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" distT="0" distB="0" distL="0" distR="0"><wp:extent cx="4800000" cy="3200000"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="'+idx+'" name="Img'+idx+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="0" name="Img'+idx+'"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rId+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="4800000" cy="3200000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
+        body+='<w:p><w:r><w:drawing>'
+          +'<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" distT="0" distB="0" distL="0" distR="0">'
+          +'<wp:extent cx="4800000" cy="3200000"/><wp:effectExtent l="0" t="0" r="0" b="0"/>'
+          +'<wp:docPr id="'+idx+'" name="Img'+idx+'"/>'
+          +'<wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr>'
+          +'<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+          +'<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+          +'<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+          +'<pic:nvPicPr><pic:cNvPr id="0" name="Img'+idx+'"/><pic:cNvPicPr/></pic:nvPicPr>'
+          +'<pic:blipFill><a:blip r:embed="'+rId+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>'
+          +'<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="4800000" cy="3200000"/></a:xfrm>'
+          +'<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr>'
+          +'</pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
       }
       qn++;
     });
   });
-  return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body></w:document>';
+  return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" '
+    +'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+    +'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    +'<w:body>'+body
+    +'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr>'
+    +'</w:body></w:document>';
 }
 
 function buildAndEmbedImages(zip,imgRefs){
@@ -844,18 +879,27 @@ function generateDocx(xml,d){
   zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
     .then(function(blob){
       var fname=safeFilename(d)+'.docx';
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();
-      setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
+      triggerDownload(blob,fname);
       showToast('📄 DOCX: '+fname);
     });
 }
-function safeFilename(d){return(d.subj+' Class '+d.cls+' '+d.exam).replace(/[^a-zA-Z0-9 \-_.]/g,'_').replace(/\s+/g,'_').slice(0,80);}
 
-/* ════════════════════════════════════════════════════
+function safeFilename(d){
+  return(d.subj+' Class '+d.cls+' '+d.exam).replace(/[^a-zA-Z0-9 \-_.]/g,'_').replace(/\s+/g,'_').slice(0,80);
+}
+function triggerDownload(blob,fname){
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    APP — SAVE / LOAD / SHARE
-   openShareApp(): Mobile → deep-link app, Desktop → web
-════════════════════════════════════════════════════ */
+   KEY FIX: WhatsApp deep-link uses different schemes per platform
+   Android: intent:// OR direct package open
+   iOS:     whatsapp://
+   Desktop: web.whatsapp.com
+═══════════════════════════════════════════════════════════════════ */
 var APP=(function(){
   var SAVES_KEY='qpm_saves_v2',AUTO_KEY='qpm_auto_v2',saveTimer=null;
 
@@ -871,17 +915,42 @@ var APP=(function(){
   }
   function gatherState(){
     return{
-      details:{school:document.getElementById('school').value,year:document.getElementById('year').value,exam:document.getElementById('exam').value,subj:document.getElementById('subj').value,subjC:document.getElementById('subjC').value,cls:document.getElementById('cls').value,marks:document.getElementById('marks').value,tmin:document.getElementById('tmin').value,setv:document.getElementById('setv').value,edate:document.getElementById('edate').value,insts:document.getElementById('insts').value},
-      sections:JSON.parse(JSON.stringify(sections.map(function(s){return{id:s.id,title:s.title,questions:s.questions.map(function(q){var r={id:q.id,type:q.type,text:q.text,marks:q.marks};if(q.opts)r.opts=q.opts.slice();if(q.pairs)r.pairs=q.pairs.map(function(p){return{l:p.l,r:p.r};});if(q.headers)r.headers=q.headers.slice();if(q.rows)r.rows=q.rows.map(function(row){return row.slice();});if(q.imgData)r.imgData=q.imgData;return r;})};}))),
+      details:{
+        school:document.getElementById('school').value,year:document.getElementById('year').value,
+        exam:document.getElementById('exam').value,subj:document.getElementById('subj').value,
+        subjC:document.getElementById('subjC').value,cls:document.getElementById('cls').value,
+        marks:document.getElementById('marks').value,tmin:document.getElementById('tmin').value,
+        setv:document.getElementById('setv').value,edate:document.getElementById('edate').value,
+        insts:document.getElementById('insts').value
+      },
+      sections:JSON.parse(JSON.stringify(sections.map(function(s){
+        return{id:s.id,title:s.title,questions:s.questions.map(function(q){
+          var r={id:q.id,type:q.type,text:q.text,marks:q.marks};
+          if(q.opts)r.opts=q.opts.slice();
+          if(q.pairs)r.pairs=q.pairs.map(function(p){return{l:p.l,r:p.r};});
+          if(q.headers)r.headers=q.headers.slice();
+          if(q.rows)r.rows=q.rows.map(function(row){return row.slice();});
+          if(q.imgData)r.imgData=q.imgData;
+          return r;
+        })};
+      }))),
       counters:{sec:secIdCounter,q:qIdCounter},curStep:curStep
     };
   }
-  function autoSave(){try{localStorage.setItem(AUTO_KEY,JSON.stringify(gatherState()));setSaveState('saved');}catch(e){setSaveState('idle','Save failed');}}
+  function autoSave(){
+    try{localStorage.setItem(AUTO_KEY,JSON.stringify(gatherState()));setSaveState('saved');}
+    catch(e){setSaveState('idle','Save failed');}
+  }
   function saveNow(){autoSave();showToast('💾 Saved');}
   function saveAs(){
     var name=prompt('Name for this save:');if(!name)return;
-    try{var saves=getSaves(),state=gatherState();state._name=name;state._ts=Date.now();saves.unshift(state);if(saves.length>30)saves=saves.slice(0,30);localStorage.setItem(SAVES_KEY,JSON.stringify(saves));updateSavesCount();showToast('📌 Saved as "'+name+'"');}
-    catch(e){showToast('❌ Save failed');}
+    try{
+      var saves=getSaves(),state=gatherState();
+      state._name=name;state._ts=Date.now();
+      saves.unshift(state);if(saves.length>30)saves=saves.slice(0,30);
+      localStorage.setItem(SAVES_KEY,JSON.stringify(saves));
+      updateSavesCount();showToast('📌 Saved as "'+name+'"');
+    }catch(e){showToast('❌ Save failed');}
   }
   function getSaves(){try{return JSON.parse(localStorage.getItem(SAVES_KEY)||'[]');}catch(e){return[];}}
   function updateSavesCount(){var el=document.getElementById('savesCount');if(el)el.textContent=getSaves().length;}
@@ -889,7 +958,13 @@ var APP=(function(){
     var saves=getSaves(),body=document.getElementById('savesListBody');
     body.innerHTML=saves.length?saves.map(function(s,i){
       var d=s.details||{},meta=(d.subj||'')+(d.cls?' · Class '+d.cls:'');
-      return'<div class="save-item"><div class="save-item-info"><div class="save-item-name">'+esc2(s._name||('Save '+(i+1)))+'</div><div class="save-item-meta">'+(meta?esc2(meta)+' · ':'')+( s._ts?new Date(s._ts).toLocaleString():'')+'</div></div><div class="save-item-btns"><button class="si-btn load" onclick="APP.loadSave('+i+')">Load</button><button class="si-btn del" onclick="APP.deleteSave('+i+')">Del</button></div></div>';
+      return'<div class="save-item"><div class="save-item-info">'
+        +'<div class="save-item-name">'+esc2(s._name||('Save '+(i+1)))+'</div>'
+        +'<div class="save-item-meta">'+(meta?esc2(meta)+' · ':'')+( s._ts?new Date(s._ts).toLocaleString():'')+'</div>'
+        +'</div><div class="save-item-btns">'
+        +'<button class="si-btn load" onclick="APP.loadSave('+i+')">Load</button>'
+        +'<button class="si-btn del" onclick="APP.deleteSave('+i+')">Del</button>'
+        +'</div></div>';
     }).join(''):'<div class="empty-saves">No saved papers yet.<br>Use <b>Save as</b> to keep a copy.</div>';
     document.getElementById('savesModal').style.display='flex';
   }
@@ -901,7 +976,8 @@ var APP=(function(){
     if(!state)return;
     var d=state.details||{};
     function sv(id,v){var el=document.getElementById(id);if(el&&v!==undefined)el.value=v;}
-    sv('school',d.school);sv('year',d.year);sv('exam',d.exam);sv('subj',d.subj);sv('subjC',d.subjC);sv('cls',d.cls);sv('marks',d.marks);sv('tmin',d.tmin);sv('setv',d.setv);sv('edate',d.edate);sv('insts',d.insts);
+    sv('school',d.school);sv('year',d.year);sv('exam',d.exam);sv('subj',d.subj);sv('subjC',d.subjC);
+    sv('cls',d.cls);sv('marks',d.marks);sv('tmin',d.tmin);sv('setv',d.setv);sv('edate',d.edate);sv('insts',d.insts);
     subjChg();
     sections=[];document.getElementById('secsContainer').innerHTML='';
     if(state.counters){secIdCounter=state.counters.sec||0;qIdCounter=state.counters.q||0;}
@@ -918,16 +994,24 @@ var APP=(function(){
     goStep(state.curStep||0);
   }
 
-  /* ─────────────────────────────────────────
-     PREPARE SHARE — build + download DOCX
-  ───────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────
+     PREPARE SHARE — builds + downloads the DOCX file
+  ───────────────────────────────────────────────────────── */
   function prepareShare(){
-    document.getElementById('preparingMsg').style.display='block';
-    document.getElementById('shareReadyBadge').classList.remove('show');
+    var btn=document.getElementById('prepBtn');
+    var msg=document.getElementById('preparingMsg');
+    var badge=document.getElementById('shareReadyBadge');
+    btn.disabled=true;
+    msg.style.display='block';
+    badge.classList.remove('show');
+
     buildPreview();
     var d=getDetails();
     var xml=buildDocxXml(d);
-    if(typeof JSZip==='undefined'){showToast('JSZip not loaded.');document.getElementById('preparingMsg').style.display='none';return;}
+    if(typeof JSZip==='undefined'){
+      showToast('JSZip not loaded.');
+      msg.style.display='none';btn.disabled=false;return;
+    }
     var imgRefs=window._docxImgRefs||[];
     var zip=new JSZip();
     zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Default Extension="webp" ContentType="image/webp"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
@@ -937,64 +1021,100 @@ var APP=(function(){
     zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
       .then(function(blob){
         var fname=safeFilename(d)+'.docx';
-        var url=URL.createObjectURL(blob);
-        var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();
-        setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
-        document.getElementById('preparingMsg').style.display='none';
-        var badge=document.getElementById('shareReadyBadge');badge.classList.add('show');
+        triggerDownload(blob,fname);
+        msg.style.display='none';
+        badge.classList.add('show');
         document.getElementById('shareReadyName').textContent=fname;
+        btn.disabled=false;
         showToast('✓ File ready: '+fname);
+      }).catch(function(err){
+        msg.style.display='none';btn.disabled=false;
+        showToast('❌ Build failed: '+err.message);
       });
   }
 
-  /* ─────────────────────────────────────────────────────
+  /* ─────────────────────────────────────────────────────────────────
      openShareApp()
-     MOBILE  → deep-link to native app, fallback to web
-     DESKTOP → open web app directly in new tab
-  ───────────────────────────────────────────────────── */
-  function openShareApp(name) {
-    var d = getDetails();
+     WhatsApp on Android:
+       - Intent URI: intent:#Intent;action=android.intent.action.SEND;type=*\/*;package=com.whatsapp;end
+       - OR just navigate: whatsapp://send  (works on most Android)
+     WhatsApp on iOS:
+       - whatsapp://send (opens app)
+     Desktop:
+       - web.whatsapp.com
 
-    if (name === 'WhatsApp') {
-      if (isMobile) {
-        window.location.href = 'whatsapp://';
-        setTimeout(function() {
-          if (!document.hidden) window.open('https://web.whatsapp.com', '_blank');
-        }, 1500);
+     Telegram on Android: tg://  (works — user confirmed)
+     Telegram on iOS: tg://
+     Telegram Desktop: web.telegram.org
+
+     Gmail Android: intent:#Intent;action=android.intent.action.MAIN;package=com.google.android.gm;end
+     Gmail iOS: googlegmail://
+     Gmail Desktop: mail.google.com compose URL
+  ─────────────────────────────────────────────────────────────────── */
+  function openShareApp(id){
+    var d=getDetails();
+    var subjEncoded=encodeURIComponent(d.subj+' Question Paper — '+d.exam);
+
+    if(id==='wa'){
+      if(isAndroid){
+        // On Android, use intent URI — opens WhatsApp app directly
+        // If WhatsApp not installed, falls back to Play Store
+        var intentUrl='intent://send#Intent;action=android.intent.action.SEND;'
+          +'type=text/plain;'
+          +'S.android.intent.extra.TEXT='+encodeURIComponent('Question Paper: '+d.subj+' | Class '+d.cls)+';'
+          +'package=com.whatsapp;'
+          +'S.browser_fallback_url=https://web.whatsapp.com;end';
+        window.location.href=intentUrl;
+      } else if(isIOS){
+        // iOS: whatsapp://send works reliably
+        window.location.href='whatsapp://send?text='+encodeURIComponent('Question Paper: '+d.subj+' | Class '+d.cls);
       } else {
-        window.open('https://web.whatsapp.com', '_blank');
+        window.open('https://web.whatsapp.com','_blank');
       }
 
-    } else if (name === 'Telegram') {
-      if (isMobile) {
-        window.location.href = 'tg://';
-        setTimeout(function() {
-          if (!document.hidden) window.open('https://web.telegram.org', '_blank');
-        }, 1500);
+    } else if(id==='tg'){
+      if(isMobile){
+        // tg:// deep-link — confirmed working on Android by user
+        window.location.href='tg://';
+        // Fallback: if app not installed, open web after delay
+        setTimeout(function(){
+          if(!document.hidden) window.open('https://web.telegram.org','_blank');
+        },2000);
       } else {
-        window.open('https://web.telegram.org', '_blank');
+        window.open('https://web.telegram.org','_blank');
       }
 
-    } else if (name === 'Gmail') {
-      var subj = encodeURIComponent(d.subj + ' Question Paper — ' + d.exam);
-      var gmailWebUrl = 'https://mail.google.com/mail/?view=cm&fs=1&su=' + subj;
-      if (isMobile) {
-        window.location.href = 'googlegmail:///co?subject=' + subj;
-        setTimeout(function() {
-          if (!document.hidden) window.location.href = 'mailto:?subject=' + subj + '&body=Please%20find%20the%20question%20paper%20attached.';
-        }, 1200);
+    } else if(id==='gm'){
+      if(isAndroid){
+        // Android: intent URI for Gmail
+        var gmIntent='intent://compose#Intent;action=android.intent.action.SENDTO;'
+          +'S.android.intent.extra.SUBJECT='+encodeURIComponent(d.subj+' Question Paper — '+d.exam)+';'
+          +'package=com.google.android.gm;'
+          +'S.browser_fallback_url=https://mail.google.com/mail/?view=cm%26su='+subjEncoded+';end';
+        window.location.href=gmIntent;
+      } else if(isIOS){
+        // iOS Gmail app
+        window.location.href='googlegmail:///co?subject='+subjEncoded+'&body='+encodeURIComponent('Please find the question paper attached.');
+        setTimeout(function(){
+          if(!document.hidden) window.location.href='mailto:?subject='+subjEncoded;
+        },1500);
       } else {
-        window.open(gmailWebUrl, '_blank');
+        window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+subjEncoded,'_blank');
       }
 
-    } else if (name === 'More Apps') {
-      if (isMobile && navigator.share) {
+    } else if(id==='more'){
+      // Native share API (mobile) or fallback
+      if(isMobile && navigator.share){
         navigator.share({
-          title: d.subj + ' Question Paper',
-          text: 'Please find the question paper attached.'
-        }).catch(function() { showToast('Share cancelled'); });
+          title:d.subj+' Question Paper',
+          text:'Question Paper: '+d.subj+' Class '+d.cls+' — '+d.exam+'\nFile downloaded to Downloads folder.'
+        }).then(function(){
+          showToast('✓ Shared');
+        }).catch(function(err){
+          if(err.name!=='AbortError') showToast('File is in Downloads — attach manually');
+        });
       } else {
-        showToast('File saved to Downloads — attach it manually 📂');
+        showToast('📂 File saved in Downloads — attach it in any app');
       }
     }
   }
@@ -1011,7 +1131,11 @@ var APP=(function(){
   }
   setTimeout(init,100);
 
-  return{scheduleSave:scheduleSave,saveNow:saveNow,saveAs:saveAs,openSaves:openSaves,closeSaves:closeSaves,loadSave:loadSave,deleteSave:deleteSave,prepareShare:prepareShare,openShareApp:openShareApp};
+  return{
+    scheduleSave:scheduleSave,saveNow:saveNow,saveAs:saveAs,
+    openSaves:openSaves,closeSaves:closeSaves,loadSave:loadSave,deleteSave:deleteSave,
+    prepareShare:prepareShare,openShareApp:openShareApp
+  };
 })();
 
 /* ═══════════════════════════════════
@@ -1027,8 +1151,12 @@ function loadSample(){
   s2.questions.push({id:'q_'+(++qIdCounter),type:'match',text:'Match the following:',marks:3,pairs:[{l:'Mouse',r:'Pointing device'},{l:'RAM',r:'Temporary memory'},{l:'CPU',r:'Brain of computer'}]});
   sections.push(s1,s2);
   [s1,s2].forEach(function(s){
-    var c=document.getElementById('secsContainer'),div=document.createElement('div');div.className='sec';div.id='sec_'+s.id;div.innerHTML=secHtml(s);c.appendChild(div);
-    s.questions.forEach(function(q){var cont=document.getElementById('qs_'+s.id),qDiv=document.createElement('div');qDiv.className='q-item';qDiv.id='qi_'+q.id;qDiv.innerHTML=qHtml(s.id,q);cont.appendChild(qDiv);});
+    var c=document.getElementById('secsContainer'),div=document.createElement('div');
+    div.className='sec';div.id='sec_'+s.id;div.innerHTML=secHtml(s);c.appendChild(div);
+    s.questions.forEach(function(q){
+      var cont=document.getElementById('qs_'+s.id),qDiv=document.createElement('div');
+      qDiv.className='q-item';qDiv.id='qi_'+q.id;qDiv.innerHTML=qHtml(s.id,q);cont.appendChild(qDiv);
+    });
   });
   goStep(1);showToast('✓ Sample loaded');
 }
