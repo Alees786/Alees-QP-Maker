@@ -793,8 +793,9 @@ function buildDocxXml(d){
   var body='';
   body+=para(d.school,{bold:true,center:true,sz:26});
   body+=para(d.exam+' — '+d.year,{bold:true,center:true,sz:22});
+  body+=para('Subject: '+d.subj+', {bold:true,center:true,sz:22});
   body+=hRule();
-  body+=para('Subject: '+d.subj+'   |   Class: '+d.cls+'   |   Max Marks: '+d.marks+'   |   Time: '+d.tmin+' min',{sz:20});
+  body+=para( Class: '+d.cls+'   |   Max Marks: '+d.marks+'   |   Time: '+d.tmin+' min',{sz:20});
   if(d.setv||d.edate)body+=para((d.setv?'Set: '+d.setv+'   ':'')+( d.edate?'Date: '+d.edate:''),{sz:20});
   body+=para('Name: ________________________   Roll No: _______   Section: _____',{sz:20});
   if(d.insts.trim()){body+=para('General Instructions:',{bold:true,sz:20});d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){body+=para((i+1)+'. '+l,{sz:18});});}
