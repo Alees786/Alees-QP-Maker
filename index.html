@@ -119,25 +119,143 @@ textarea{resize:vertical;line-height:1.5}
 .ptabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
 .ptab{padding:5px 13px;font-size:12px;border:1px solid var(--line2);border-radius:99px;cursor:pointer;background:none;color:var(--ink2);font-family:var(--ui);font-weight:600;transition:all .15s}
 .ptab.active{background:var(--green);color:#fff;border-color:var(--green)}
-.paper{background:#fff;color:#111;border:1px solid #ccc;border-radius:var(--r2);padding:18px 16px;font-family:'Georgia',serif;font-size:12px;line-height:1.7;overflow-x:auto}
-.paper .sch{text-align:center;font-size:14px;font-weight:bold}
-.paper .ex{text-align:center;font-size:12px;font-weight:bold;margin:2px 0}
-.paper hr{border:none;border-top:1.5px solid #111;margin:7px 0}
-.paper .meta{display:flex;flex-wrap:wrap;justify-content:space-between;font-size:11px;gap:3px}
-.paper .nml{font-size:11px;margin:4px 0}
-.paper .ins{font-size:10.5px;font-style:italic;margin:5px 0 8px;padding:5px 8px;border-left:2px solid #bbb;background:#fafafa;color:#333}
-.paper .ins ol{margin:3px 0 0 14px}
-.paper .sec-t{font-weight:bold;font-size:12px;border-bottom:1px solid #ccc;padding-bottom:2px;margin:12px 0 4px}
-.paper .q{margin:4px 0 4px 14px;font-size:12px}
-.paper .mcq-opt{margin-left:28px;font-size:11.5px}
-.paper .match-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}
-.paper .match-tbl td,.paper .match-tbl th{padding:3px 8px;border:1px solid #ccc;vertical-align:top}
-.paper .match-tbl th{background:#f0f0f0;font-weight:bold}
-.paper .data-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}
-.paper .data-tbl td,.paper .data-tbl th{padding:3px 8px;border:1px solid #ccc}
-.paper .data-tbl th{background:#f0f0f0;font-weight:bold}
-.paper .q-img{display:block;max-width:75%;margin:5px 0 3px 14px;border:1px solid #ccc;border-radius:3px}
-.paper .ph{color:#bbb}
+
+/* ══════════════════════════════════════════════════════════
+   PAPER PREVIEW — Professional Exam Paper Typography
+   Matches: Times-style serif, tight spacing, formal layout
+══════════════════════════════════════════════════════════ */
+.paper{
+  background:#fff;color:#111;
+  border:1px solid #bbb;border-radius:var(--r2);
+  padding:20px 22px;
+  font-family:'Times New Roman',Times,serif;
+  font-size:11.5px;
+  line-height:1.35;
+  overflow-x:auto;
+}
+/* School name — large, caps, bold */
+.paper .p-school{
+  text-align:center;
+  font-size:16px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  line-height:1.1;
+  margin-bottom:2px;
+}
+/* Subject line — bold, slightly smaller */
+.paper .p-subj{
+  text-align:center;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:1px;
+  line-height:1.2;
+}
+/* Exam name line */
+.paper .p-exam{
+  text-align:center;
+  font-size:11.5px;
+  font-weight:700;
+  margin-bottom:4px;
+  line-height:1.2;
+}
+/* Top divider */
+.paper .p-rule{border:none;border-top:2px solid #111;margin:4px 0;}
+.paper .p-rule-thin{border:none;border-top:1px solid #555;margin:3px 0;}
+/* Meta row — two columns like screenshot */
+.paper .p-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  font-size:11px;
+  line-height:1.5;
+  padding:3px 0 2px;
+}
+.paper .p-meta-left{text-align:left;}
+.paper .p-meta-right{text-align:right;}
+/* Name/Roll row */
+.paper .p-nameline{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  line-height:1.5;
+  padding:2px 0 3px;
+  border-top:1px solid #bbb;
+  margin-top:2px;
+}
+/* Instructions */
+.paper .p-ins{
+  font-size:10.5px;
+  font-style:italic;
+  margin:5px 0 6px;
+  padding:4px 8px;
+  border-left:2px solid #888;
+  background:#f8f8f8;
+  color:#333;
+  line-height:1.55;
+}
+.paper .p-ins ol{margin:2px 0 0 14px}
+.paper .p-ins li{margin-bottom:1px}
+/* Section heading */
+.paper .sec-t{
+  font-weight:700;
+  font-size:11.5px;
+  border-top:1px solid #888;
+  border-bottom:1px solid #888;
+  padding:2px 0;
+  margin:10px 0 4px;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+/* Question lines */
+.paper .q{
+  margin:3px 0 2px 0;
+  font-size:11.5px;
+  line-height:1.5;
+  display:flex;
+  gap:4px;
+}
+.paper .q-num{font-weight:700;min-width:20px;flex-shrink:0}
+.paper .q-text{flex:1}
+.paper .q-mark{
+  font-size:10px;color:#555;
+  white-space:nowrap;
+  align-self:flex-start;
+  margin-top:2px;
+  font-style:italic;
+}
+/* MCQ options — 2×2 grid like real papers */
+.paper .mcq-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 16px;
+  margin:2px 0 3px 22px;
+  font-size:11px;
+}
+.paper .mcq-opt{line-height:1.5}
+/* Match table */
+.paper .match-tbl{
+  width:90%;margin:3px 0 3px 22px;
+  border-collapse:collapse;font-size:11px;
+}
+.paper .match-tbl td,.paper .match-tbl th{
+  padding:2px 8px;border:1px solid #aaa;vertical-align:top;line-height:1.4;
+}
+.paper .match-tbl th{background:#efefef;font-weight:700;text-align:center;}
+/* Data table */
+.paper .data-tbl{
+  width:90%;margin:3px 0 3px 22px;
+  border-collapse:collapse;font-size:11px;
+}
+.paper .data-tbl td,.paper .data-tbl th{
+  padding:2px 8px;border:1px solid #aaa;line-height:1.4;
+}
+.paper .data-tbl th{background:#efefef;font-weight:700;}
+/* Image in question */
+.paper .q-img{display:block;max-width:70%;margin:4px 0 2px 22px;border:1px solid #bbb;}
+.paper .ph{color:#bbb;font-style:italic}
+
 .raw{font-family:var(--mono);font-size:11px;line-height:1.7;white-space:pre-wrap;color:var(--ink);padding:12px;background:var(--paper2);border-radius:var(--r);border:1px solid var(--line);overflow-x:auto}
 .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .ex-card{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r2);padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s}
@@ -166,8 +284,6 @@ textarea{resize:vertical;line-height:1.5}
 .si-btn.del{color:var(--red);border-color:rgba(163,45,45,.3)}
 .si-btn.del:hover{background:#fff0f0}
 .empty-saves{text-align:center;padding:24px 12px;color:var(--ink3);font-size:13px}
-
-/* ── SHARE SECTION ── */
 .share-box{background:var(--paper2);border:1px solid var(--line);border-radius:var(--r2);padding:14px;margin-bottom:10px}
 .share-step-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 .share-dl-btn{width:100%;padding:11px 14px;border-radius:var(--r);background:var(--green);color:#fff;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;gap:10px;margin-bottom:8px}
@@ -188,7 +304,6 @@ textarea{resize:vertical;line-height:1.5}
 .app-sub{font-size:10px;color:var(--ink3);font-weight:400;margin-top:1px}
 .device-tip{background:var(--amber-lt);border:1px solid rgba(139,90,0,.2);border-radius:var(--r);padding:8px 11px;font-size:11px;color:var(--amber);line-height:1.6}
 .device-tip b{color:var(--ink2)}
-
 #adminOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;overflow-y:auto;padding:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:99px;font-size:12px;font-weight:600;z-index:2000;transition:transform .25s ease,opacity .25s ease;opacity:0;white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -205,7 +320,6 @@ textarea{resize:vertical;line-height:1.5}
   </div>
 </div>
 
-<!-- Credit banner -->
 <div class="dev-credit" id="devCredit" onclick="APP_CREDIT.tap()">
   <span class="emoji-spin" id="greetEmoji">✨</span>
   <span id="creditText"></span><span class="cursor"></span>
@@ -213,7 +327,6 @@ textarea{resize:vertical;line-height:1.5}
   <span class="emoji-spin">✨</span>
 </div>
 
-<!-- Admin Panel -->
 <div id="adminOverlay" onclick="if(event.target===this)APP_CREDIT.closeAdmin()">
   <div style="max-width:480px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)">
@@ -233,7 +346,6 @@ textarea{resize:vertical;line-height:1.5}
   </div>
 </div>
 
-<!-- Save bar -->
 <div class="save-bar">
   <div class="save-dot" id="saveDot"></div>
   <div class="save-status" id="saveStatus">Ready</div>
@@ -244,7 +356,6 @@ textarea{resize:vertical;line-height:1.5}
   </div>
 </div>
 
-<!-- Steps -->
 <div class="steps">
   <button class="step active" data-step="0" onclick="goStep(0)"><span class="snum">1</span>Details</button>
   <button class="step" data-step="1" onclick="goStep(1)"><span class="snum">2</span>Questions</button>
@@ -288,7 +399,7 @@ textarea{resize:vertical;line-height:1.5}
     <div class="field"><label>Time (min)</label><input type="number" id="tmin" value="120" min="10"></div>
   </div>
   <div class="g2">
-    <div class="field"><label>Set</label>
+    <div class="field"><label>Division / Set</label>
       <select id="setv"><option>A</option><option>B</option><option>C</option><option>D</option><option value="">— None —</option></select>
     </div>
     <div class="field"><label>Date of Exam</label><input type="text" id="edate" placeholder="e.g. 15 June 2026"></div>
@@ -349,7 +460,6 @@ Answers must be written in the answer booklet provided.</textarea>
 
   <div class="sep-lbl" style="margin-top:16px">Share via App</div>
   <div class="share-box">
-    <!-- Step 1 -->
     <div class="share-step-lbl">Step 1 — Prepare &amp; Download your file</div>
     <button class="share-dl-btn" id="prepBtn" onclick="APP.prepareShare()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -359,14 +469,10 @@ Answers must be written in the answer booklet provided.</textarea>
       ✓ File downloaded — <span id="shareReadyName" style="font-family:var(--mono);font-size:11px;margin-left:2px"></span>
     </div>
     <div id="preparingMsg" style="display:none;font-size:12px;color:var(--ink3);padding:4px 0 8px">⏳ Building your file…</div>
-
-    <!-- Step 2 -->
     <div class="share-divider"><span>Step 2 — Open your app &amp; attach the file</span></div>
     <div class="share-step-lbl" id="shareDeviceLbl">Open app to share</div>
-    <div class="share-app-grid" id="shareAppGrid">
-      <!-- rendered by JS -->
-    </div>
-    <div class="device-tip" id="shareInfoBox"><!-- rendered by JS --></div>
+    <div class="share-app-grid" id="shareAppGrid"></div>
+    <div class="device-tip" id="shareInfoBox"></div>
   </div>
 
   <div class="nav">
@@ -377,9 +483,8 @@ Answers must be written in the answer booklet provided.</textarea>
     <button class="btn-ghost" onclick="clearAll()" style="border:1px solid var(--line2);color:var(--red)">🗑 Clear all &amp; reset</button>
   </div>
 </div>
-</div><!-- /wrap -->
+</div>
 
-<!-- Saves modal -->
 <div class="modal-overlay" id="savesModal" style="display:none" onclick="if(event.target===this)APP.closeSaves()">
   <div class="modal">
     <div class="modal-hdr">
@@ -389,89 +494,65 @@ Answers must be written in the answer booklet provided.</textarea>
     <div class="modal-body" id="savesListBody"></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-/* ═══════════════════════════════════
-   DEVICE DETECTION
-═══════════════════════════════════ */
-var UA = navigator.userAgent || '';
-var isAndroid = /Android/i.test(UA);
-var isIOS     = /iPhone|iPad|iPod/i.test(UA);
-var isMobile  = isAndroid || isIOS;
+/* ══ DEVICE DETECTION ══ */
+var UA=navigator.userAgent||'';
+var isAndroid=/Android/i.test(UA);
+var isIOS=/iPhone|iPad|iPod/i.test(UA);
+var isMobile=isAndroid||isIOS;
 
-/* ═══════════════════════════════════
-   TOAST
-═══════════════════════════════════ */
+/* ══ TOAST ══ */
 function showToast(msg){
   var t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2600);
 }
 
-/* ═══════════════════════════════════
-   RENDER SHARE BUTTONS
-═══════════════════════════════════ */
+/* ══ SHARE BUTTONS ══ */
 function renderShareButtons(){
-  var grid = document.getElementById('shareAppGrid');
-  var info = document.getElementById('shareInfoBox');
-  var lbl  = document.getElementById('shareDeviceLbl');
-
-  var apps = [
-    { id:'wa',  bg:'#25D366', emoji:'💬', name:'WhatsApp',
-      mobileSub: isAndroid ? 'Opens WhatsApp app' : 'Opens WhatsApp',
-      webSub: 'web.whatsapp.com' },
-    { id:'tg',  bg:'#2AABEE', emoji:'✈️', name:'Telegram',
-      mobileSub:'Opens Telegram app', webSub:'web.telegram.org' },
-    { id:'gm',  bg:'#EA4335', emoji:'📧', name:'Gmail',
-      mobileSub:'Opens Gmail / Mail', webSub:'mail.google.com' },
-    { id:'more',bg:'#6B7280', emoji:'📤', name:'More Apps',
-      mobileSub:'Phone share sheet', webSub:'Copy / other options' }
+  var grid=document.getElementById('shareAppGrid');
+  var info=document.getElementById('shareInfoBox');
+  var lbl=document.getElementById('shareDeviceLbl');
+  var apps=[
+    {id:'wa',bg:'#25D366',emoji:'💬',name:'WhatsApp',mobileSub:isAndroid?'Opens WhatsApp app':'Opens WhatsApp',webSub:'web.whatsapp.com'},
+    {id:'tg',bg:'#2AABEE',emoji:'✈️',name:'Telegram',mobileSub:'Opens Telegram app',webSub:'web.telegram.org'},
+    {id:'gm',bg:'#EA4335',emoji:'📧',name:'Gmail',mobileSub:'Opens Gmail / Mail',webSub:'mail.google.com'},
+    {id:'more',bg:'#6B7280',emoji:'📤',name:'More Apps',mobileSub:'Phone share sheet',webSub:'Copy / other options'}
   ];
-
-  var html = apps.map(function(a){
-    var sub = isMobile ? a.mobileSub : a.webSub;
-    return '<button class="share-app-btn" onclick="APP.openShareApp(\''+a.id+'\')">'
+  grid.innerHTML=apps.map(function(a){
+    var sub=isMobile?a.mobileSub:a.webSub;
+    return'<button class="share-app-btn" onclick="APP.openShareApp(\''+a.id+'\')">'
       +'<div class="app-icon" style="background:'+a.bg+'">'+a.emoji+'</div>'
-      +'<div><div class="app-name">'+a.name+'</div>'
-      +'<div class="app-sub">'+sub+'</div>'
-      +'</div></button>';
+      +'<div><div class="app-name">'+a.name+'</div><div class="app-sub">'+sub+'</div></div></button>';
   }).join('');
-  grid.innerHTML = html;
-
-  lbl.textContent = isMobile ? 'Open app on your phone 📱' : 'Open in browser 🖥️';
-
+  lbl.textContent=isMobile?'Open app on your phone 📱':'Open in browser 🖥️';
   if(isMobile){
-    info.innerHTML = '<b>📱 Mobile instructions:</b><br>'
+    info.innerHTML='<b>📱 Mobile instructions:</b><br>'
       +'1. Tap <b>Prepare &amp; Download DOCX</b> first — file saves to Downloads.<br>'
       +'2. Tap WhatsApp / Telegram button below — app opens directly.<br>'
-      +'3. Inside the app: tap 📎 Attach → Document → select the file from Downloads.<br><br>'
+      +'3. Inside the app: tap 📎 Attach → Document → select file from Downloads.<br><br>'
       +'<b>WhatsApp:</b> 📎 → Document → Downloads<br>'
       +'<b>Telegram:</b> 📎 → File → Downloads<br>'
       +'<b>Gmail:</b> 📎 paperclip → Attach file → Downloads';
   } else {
-    info.innerHTML = '<b>🖥️ Desktop instructions:</b><br>'
+    info.innerHTML='<b>🖥️ Desktop instructions:</b><br>'
       +'1. Tap <b>Prepare &amp; Download DOCX</b> — file saves to Downloads folder.<br>'
       +'2. Click WhatsApp / Telegram / Gmail below — web version opens in new tab.<br>'
       +'3. In the web app: use the 📎 attach icon to upload from your Downloads folder.';
   }
 }
 
-/* ═══════════════════════════════════
-   CREDIT BANNER
-═══════════════════════════════════ */
+/* ══ CREDIT BANNER ══ */
 var APP_CREDIT=(function(){
   var SPECIAL_KEY='qpm_special_days_v1';
   var tapCount=0,tapTimer=null;
   var builtIn=[
-    {m:1,d:1,msg:'Happy New Year!',emoji:'🎉'},
-    {m:1,d:26,msg:'Happy Republic Day!',emoji:'🇮🇳'},
-    {m:3,d:8,msg:"Happy Women's Day!",emoji:'💐'},
-    {m:8,d:15,msg:'Happy Independence Day!',emoji:'🇮🇳'},
-    {m:9,d:5,msg:"Happy Teachers' Day!",emoji:'🏫'},
-    {m:10,d:2,msg:'Happy Gandhi Jayanti!',emoji:'🕊️'},
+    {m:1,d:1,msg:'Happy New Year!',emoji:'🎉'},{m:1,d:26,msg:'Happy Republic Day!',emoji:'🇮🇳'},
+    {m:3,d:8,msg:"Happy Women's Day!",emoji:'💐'},{m:8,d:15,msg:'Happy Independence Day!',emoji:'🇮🇳'},
+    {m:9,d:5,msg:"Happy Teachers' Day!",emoji:'🏫'},{m:10,d:2,msg:'Happy Gandhi Jayanti!',emoji:'🕊️'},
     {m:12,d:25,msg:'Happy Christmas!',emoji:'🎄'},
   ];
   function getCustom(){try{return JSON.parse(localStorage.getItem(SPECIAL_KEY)||'[]');}catch(e){return[];}}
@@ -517,30 +598,21 @@ var APP_CREDIT=(function(){
   return{tap:tap,openAdmin:openAdmin,closeAdmin:closeAdmin,addSpecial:addSpecial,deleteSpecial:deleteSpecial};
 })();
 
-/* ═══════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════ */
+/* ══ NAVIGATION ══ */
 var curStep=0;
 function goStep(n){
   if(n===2)buildPreview();
   if(n===3)checkImgNote();
   document.querySelectorAll('.panel').forEach(function(p,i){p.classList.toggle('active',i===n);});
   document.querySelectorAll('.step').forEach(function(s,i){
-    s.classList.toggle('active',i===n);
-    s.classList.toggle('done',i<n);
-    var sn=s.querySelector('.snum');
-    if(sn)sn.textContent=i<n?'✓':(i+1);
+    s.classList.toggle('active',i===n);s.classList.toggle('done',i<n);
+    var sn=s.querySelector('.snum');if(sn)sn.textContent=i<n?'✓':(i+1);
   });
-  curStep=n;window.scrollTo({top:0,behavior:'smooth'});
-  APP.scheduleSave();
+  curStep=n;window.scrollTo({top:0,behavior:'smooth'});APP.scheduleSave();
 }
-function subjChg(){
-  document.getElementById('subjCW').style.display=document.getElementById('subj').value==='Other (type below)'?'block':'none';
-}
+function subjChg(){document.getElementById('subjCW').style.display=document.getElementById('subj').value==='Other (type below)'?'block':'none';}
 
-/* ═══════════════════════════════════
-   SECTIONS & QUESTIONS
-═══════════════════════════════════ */
+/* ══ SECTIONS & QUESTIONS ══ */
 var sections=[],secIdCounter=0,qIdCounter=0;
 function addSec(title){
   var id='sec_'+(++secIdCounter);
@@ -551,7 +623,7 @@ function addSec(title){
   APP.scheduleSave();
 }
 function secHtml(sec){
-  return '<div class="sec-hdr"><input type="text" value="'+esc(sec.title)+'" onchange="secRename(\''+sec.id+'\',this.value)" placeholder="Section title"><button class="btn-del" onclick="delSec(\''+sec.id+'\')">✕ Remove</button></div>'
+  return'<div class="sec-hdr"><input type="text" value="'+esc(sec.title)+'" onchange="secRename(\''+sec.id+'\',this.value)" placeholder="Section title"><button class="btn-del" onclick="delSec(\''+sec.id+'\')">✕ Remove</button></div>'
     +'<div id="qs_'+sec.id+'"></div>'
     +'<div class="add-q-menu">'
     +'<button class="add-q-btn tag-text" onclick="addQ(\''+sec.id+'\',\'text\')">+ Text / Long Answer</button>'
@@ -609,7 +681,7 @@ function qHtml(sid,q){
   h+='</div>';return h;
 }
 function pairRowHtml(qid,i,p){
-  return '<div class="g2" style="margin-bottom:5px" id="pair_'+qid+'_'+i+'">'
+  return'<div class="g2" style="margin-bottom:5px" id="pair_'+qid+'_'+i+'">'
     +'<input type="text" value="'+esc(p.l||'')+'" placeholder="Left '+(i+1)+'" onchange="setPair(\''+qid+'\','+i+',\'l\',this.value)">'
     +'<div style="display:flex;gap:4px"><input type="text" value="'+esc(p.r||'')+'" placeholder="Right '+(i+1)+'" onchange="setPair(\''+qid+'\','+i+',\'r\',this.value)" style="flex:1">'
     +'<button class="btn-del" onclick="delPair(\''+qid+'\','+i+')">✕</button></div></div>';
@@ -668,9 +740,7 @@ function imgUpload(qid,e){
   };reader.readAsDataURL(file);
 }
 
-/* ═══════════════════════════════════
-   PREVIEW
-═══════════════════════════════════ */
+/* ══ PREVIEW ══ */
 function getDetails(){
   return{
     school:document.getElementById('school').value,
@@ -685,31 +755,61 @@ function getDetails(){
     insts:document.getElementById('insts').value
   };
 }
+
 function buildPreview(){
   var d=getDetails();
-  var h='<div class="sch">'+esc2(d.school)+'</div>'
-    +'<div class="sch">'+esc2(d.subj)+'</div>'
-    +'<div class="ex">'+esc2(d.exam)+' — '+esc2(d.year)+'</div><hr>';
-  h+='<div class="meta"><span><b>Subject:</b> '+esc2(d.subj)+'</span><span><b>Class:</b> '+esc2(d.cls)+'</span>'
-    +'<span><b>Max Marks:</b> '+esc2(d.marks)+'</span><span><b>Time:</b> '+esc2(d.tmin)+' min</span>';
-  if(d.setv)h+='<span><b>Set:</b> '+esc2(d.setv)+'</span>';
-  if(d.edate)h+='<span><b>Date:</b> '+esc2(d.edate)+'</span>';
-  h+='</div><div class="nml">Name: __________________________________________ &nbsp;&nbsp; Roll No: _______ &nbsp;&nbsp; Section: _____</div>';
+  /* ── Professional header matching screenshot layout ── */
+  var h='';
+  h+='<div class="p-school">'+esc2(d.school)+'</div>';
+  h+='<div class="p-subj">'+esc2(d.subj)+'</div>';
+  h+='<div class="p-exam">'+esc2(d.exam)+' &nbsp;'+esc2(d.year)+'</div>';
+  h+='<hr class="p-rule">';
+  /* Two-column meta row: Class+Div left | Marks+Time right */
+  h+='<div class="p-meta">';
+  h+='<div class="p-meta-left">'
+    +'<b>Class:</b> '+esc2(d.cls)
+    +(d.setv?'&nbsp;&nbsp;&nbsp;<b>Div:</b> '+esc2(d.setv):'')
+    +(d.edate?'<br><b>Date:</b> '+esc2(d.edate):'')
+    +'</div>';
+  h+='<div class="p-meta-right">'
+    +'<b>Max. Mark:</b> '+esc2(d.marks)+'<br>'
+    +'<b>Time:</b> '+timeLabel(d.tmin)
+    +'</div>';
+  h+='</div>';
+  /* Name / Roll line */
+  h+='<div class="p-nameline">';
+  h+='<span><b>Name:</b> ___________________________________</span>';
+  h+='<span><b>Roll No.</b> __________</span>';
+  h+='</div>';
+  h+='<hr class="p-rule-thin">';
+  /* Instructions */
   if(d.insts.trim()){
-    h+='<div class="ins"><b>General Instructions:</b><ol>';
+    h+='<div class="p-ins"><b>General Instructions:</b><ol>';
     d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l){h+='<li>'+esc2(l)+'</li>';});
     h+='</ol></div>';
+    h+='<hr class="p-rule-thin">';
   }
-  h+='<hr>';
+  /* Questions */
   var qn=1;
   sections.forEach(function(sec){
     if(!sec.questions.length)return;
     h+='<div class="sec-t">'+esc2(sec.title)+'</div>';
     sec.questions.forEach(function(q){
-      h+='<div class="q"><b>'+qn+'.</b> '+(q.text?esc2(q.text):'<span class="ph">(no text)</span>')+' <span style="float:right;font-size:10px;color:#888">['+q.marks+' mark'+(q.marks>1?'s':'')+']</span></div>';
-      if(q.type==='mcq'){['A','B','C','D'].forEach(function(L,i){if(q.opts[i])h+='<div class="mcq-opt">('+L+') '+esc2(q.opts[i])+'</div>';});}
+      h+='<div class="q">'
+        +'<span class="q-num">'+qn+'.</span>'
+        +'<span class="q-text">'+(q.text?esc2(q.text):'<span class="ph">(no text)</span>')+'</span>'
+        +'<span class="q-mark">('+q.marks+' mark'+(q.marks>1?'s':'')+')</span>'
+        +'</div>';
+      if(q.type==='mcq'){
+        /* 2-column MCQ grid like real papers */
+        h+='<div class="mcq-grid">';
+        ['A','B','C','D'].forEach(function(L,i){
+          if(q.opts[i])h+='<div class="mcq-opt">('+L+') '+esc2(q.opts[i])+'</div>';
+        });
+        h+='</div>';
+      }
       if(q.type==='match'&&q.pairs.length){
-        h+='<table class="match-tbl"><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>';
+        h+='<table class="match-tbl"><thead><tr><th style="width:50%">Column A</th><th>Column B</th></tr></thead><tbody>';
         q.pairs.forEach(function(p,i){h+='<tr><td>'+(i+1)+'. '+esc2(p.l||'')+'</td><td>'+romanUpper(i+1)+'. '+esc2(p.r||'')+'</td></tr>';});
         h+='</tbody></table>';
       }
@@ -725,7 +825,9 @@ function buildPreview(){
     });
   });
   document.getElementById('prevFmt').innerHTML=h;
-  var txt=d.school+'\n'+d.exam+' — '+d.year+'\nSubject: '+d.subj+' | Class: '+d.cls+' | Marks: '+d.marks+' | Time: '+d.tmin+' min\n\n';
+  /* Plain text */
+  var txt=d.school+'\n'+d.subj+' — '+d.exam+' '+d.year
+    +'\nClass: '+d.cls+'  |  Max Marks: '+d.marks+'  |  Time: '+timeLabel(d.tmin)+'\n\n';
   var qx=1;
   sections.forEach(function(sec){
     if(!sec.questions.length)return;
@@ -739,6 +841,13 @@ function buildPreview(){
   });
   document.getElementById('prevRaw').textContent=txt;
 }
+
+function timeLabel(min){
+  min=parseInt(min)||0;
+  if(min%60===0)return(min/60)+' Hour'+(min/60>1?'s':'');
+  var h=Math.floor(min/60),m=min%60;
+  return(h?h+' Hr ':'')+(m?m+' Min':'');
+}
 function swPrev(mode,btn){
   document.getElementById('prevFmt').style.display=mode==='fmt'?'':'none';
   document.getElementById('prevRaw').style.display=mode==='raw'?'':'none';
@@ -746,85 +855,119 @@ function swPrev(mode,btn){
 }
 function romanUpper(n){return(['I','II','III','IV','V','VI','VII','VIII','IX','X'])[n-1]||String(n);}
 
-/* ═══════════════════════════════════
-   PDF EXPORT
-═══════════════════════════════════ */
+/* ══ PDF EXPORT — matching new header style ══ */
 function checkImgNote(){
   document.getElementById('imgNote').style.display=sections.some(function(s){return s.questions.some(function(q){return q.type==='image'&&q.imgData;});})?'block':'none';
 }
+
+/* Shared PDF CSS string */
+var PDF_CSS=[
+  'body{font-family:"Times New Roman",Times,serif;font-size:11.5px;line-height:1.35;color:#111;margin:14mm 16mm;}',
+  '.p-school{text-align:center;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;line-height:1.1;margin-bottom:2px;}',
+  '.p-subj{text-align:center;font-size:13px;font-weight:700;margin-bottom:1px;line-height:1.2;}',
+  '.p-exam{text-align:center;font-size:11.5px;font-weight:700;margin-bottom:4px;line-height:1.2;}',
+  '.p-rule{border:none;border-top:2px solid #111;margin:4px 0;}',
+  '.p-rule-thin{border:none;border-top:1px solid #555;margin:3px 0;}',
+  '.p-meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px;line-height:1.5;padding:3px 0 2px;}',
+  '.p-meta-left{text-align:left;}.p-meta-right{text-align:right;}',
+  '.p-nameline{display:flex;justify-content:space-between;font-size:11px;line-height:1.5;padding:2px 0 3px;border-top:1px solid #bbb;margin-top:2px;}',
+  '.p-ins{font-size:10.5px;font-style:italic;margin:5px 0 6px;padding:4px 8px;border-left:2px solid #888;background:#f8f8f8;color:#333;line-height:1.55;}',
+  '.p-ins ol{margin:2px 0 0 14px}.p-ins li{margin-bottom:1px}',
+  '.sec-t{font-weight:700;font-size:11.5px;border-top:1px solid #888;border-bottom:1px solid #888;padding:2px 0;margin:10px 0 4px;text-align:center;text-transform:uppercase;letter-spacing:.04em;}',
+  '.q{margin:3px 0 2px 0;font-size:11.5px;line-height:1.5;display:flex;gap:4px;}',
+  '.q-num{font-weight:700;min-width:20px;flex-shrink:0}',
+  '.q-text{flex:1}.q-mark{font-size:10px;color:#555;white-space:nowrap;align-self:flex-start;margin-top:2px;font-style:italic;}',
+  '.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin:2px 0 3px 22px;font-size:11px;}',
+  '.mcq-opt{line-height:1.5}',
+  '.match-tbl{width:90%;margin:3px 0 3px 22px;border-collapse:collapse;font-size:11px;}',
+  '.match-tbl td,.match-tbl th{padding:2px 8px;border:1px solid #aaa;vertical-align:top;line-height:1.4;}',
+  '.match-tbl th{background:#efefef;font-weight:700;text-align:center;}',
+  '.data-tbl{width:90%;margin:3px 0 3px 22px;border-collapse:collapse;font-size:11px;}',
+  '.data-tbl td,.data-tbl th{padding:2px 8px;border:1px solid #aaa;line-height:1.4;}',
+  '.data-tbl th{background:#efefef;font-weight:700;}',
+  '.q-img{display:block;max-width:70%;margin:4px 0 2px 22px;border:1px solid #bbb;}',
+  '.ph{color:#bbb;font-style:italic}',
+  '@media print{body{margin:8mm 12mm}}'
+].join('');
+
 function dlPDF(){
   buildPreview();
   var d=getDetails(),content=document.getElementById('prevFmt').innerHTML;
   var w=window.open('','_blank');
   if(!w){showToast('⚠️ Allow pop-ups and try again');return;}
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+d.subj+' Paper</title>'
-    +'<style>body{font-family:Georgia,serif;font-size:12px;line-height:1.7;color:#111;margin:20mm 18mm}'
-    +'.sch{text-align:center;font-size:14px;font-weight:bold}.ex{text-align:center;font-size:12px;font-weight:bold;margin:2px 0}'
-    +'hr{border:none;border-top:1.5px solid #111;margin:7px 0}'
-    +'.meta{display:flex;flex-wrap:wrap;justify-content:space-between;font-size:11px;gap:3px}'
-    +'.nml{font-size:11px;margin:4px 0}'
-    +'.ins{font-size:10.5px;font-style:italic;margin:5px 0 8px;padding:5px 8px;border-left:2px solid #bbb;background:#fafafa;color:#333}'
-    +'.ins ol{margin:3px 0 0 14px}'
-    +'.sec-t{font-weight:bold;font-size:12px;border-bottom:1px solid #ccc;padding-bottom:2px;margin:12px 0 4px}'
-    +'.q{margin:4px 0 4px 14px;font-size:12px}.mcq-opt{margin-left:28px;font-size:11.5px}'
-    +'.match-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}'
-    +'.match-tbl td,.match-tbl th{padding:3px 8px;border:1px solid #ccc}.match-tbl th{background:#f0f0f0;font-weight:bold}'
-    +'.data-tbl{width:88%;margin:4px 0 4px 14px;border-collapse:collapse;font-size:11.5px}'
-    +'.data-tbl td,.data-tbl th{padding:3px 8px;border:1px solid #ccc}.data-tbl th{background:#f0f0f0;font-weight:bold}'
-    +'.q-img{display:block;max-width:75%;margin:5px 0 3px 14px;border:1px solid #ccc}.ph{color:#bbb}'
-    +'@media print{body{margin:10mm 12mm}}'
-    +'</style></head><body>'+content+'</body></html>');
+    +'<style>'+PDF_CSS+'</style></head><body>'+content+'</body></html>');
   w.document.close();w.focus();
   var imgs=w.document.images;
   if(!imgs.length){setTimeout(function(){w.print();},400);}
   else{var loaded=0,total=imgs.length;function tryP(){if(++loaded>=total)setTimeout(function(){w.print();},300);}for(var i=0;i<imgs.length;i++){if(imgs[i].complete)tryP();else{imgs[i].onload=tryP;imgs[i].onerror=tryP;}}}
 }
 
-/* ═══════════════════════════════════
-   DOCX EXPORT
-═══════════════════════════════════ */
+/* ══ DOCX EXPORT ══ */
 function dlDocx(){buildPreview();var d=getDetails();generateDocx(buildDocxXml(d),d);}
 
 function buildDocxXml(d){
   window._docxImgRefs=[];
   function para(text,opts){
     opts=opts||{};
-    return '<w:p><w:pPr>'
+    return'<w:p><w:pPr>'
       +(opts.center?'<w:jc w:val="center"/>':'')
-      +(opts.spBefore?'<w:spacing w:before="'+opts.spBefore+'"/>':'')
+      +(opts.spBefore?'<w:spacing w:before="'+opts.spBefore+'" w:after="0"/>':'<w:spacing w:after="0"/>')
       +'</w:pPr><w:r><w:rPr>'
       +(opts.bold?'<w:b/>':'')
+      +(opts.caps?'<w:caps/>':'')
       +'<w:sz w:val="'+(opts.sz||22)+'"/>'
       +'</w:rPr><w:t xml:space="preserve">'+xmlEsc(text)+'</w:t></w:r></w:p>';
   }
-  function hRule(){return'<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="111111"/></w:pBdr></w:pPr></w:p>';}
-  var body='';
-  body+=para(d.school,{bold:true,center:true,sz:26});
-  body+=para(d.exam+' — '+d.year,{bold:true,center:true,sz:22});
-  body+=para('Subject: '+d.subj,{bold:true,center:true,sz:22});
-  body+=hRule();
-  body+=para('Class: '+d.cls+'   |   Max Marks: '+d.marks+'   |   Time: '+d.tmin+' min',{sz:20});
-  if(d.setv||d.edate)body+=para((d.setv?'Set: '+d.setv+'   ':'')+(d.edate?'Date: '+d.edate:''),{sz:20});
-  body+=para('Name: _______________________________________   Roll No: _______   Section: _____',{sz:20});
-  if(d.insts.trim()){
-    body+=para('General Instructions:',{bold:true,sz:20});
-    d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){body+=para((i+1)+'. '+l,{sz:18});});
+  function hRule(thick){return'<w:p><w:pPr><w:spacing w:after="0"/><w:pBdr><w:bottom w:val="single" w:sz="'+(thick?12:6)+'" w:space="1" w:color="111111"/></w:pBdr></w:pPr></w:p>';}
+  function paraRight(leftText,rightText,sz){
+    sz=sz||20;
+    return'<w:p><w:pPr><w:spacing w:after="0"/></w:pPr>'
+      +'<w:r><w:rPr><w:b/><w:sz w:val="'+sz+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(leftText)+'</w:t></w:r>'
+      +'<w:r><w:rPr><w:sz w:val="'+sz+'"/></w:rPr><w:tab/></w:r>'
+      +'<w:r><w:rPr><w:b/><w:sz w:val="'+sz+'"/></w:rPr><w:t xml:space="preserve">'+xmlEsc(rightText)+'</w:t></w:r>'
+      +'</w:p>';
   }
-  body+=hRule();
+  var body='';
+  /* Header */
+  body+=para(d.school,{bold:true,caps:true,center:true,sz:28,spBefore:'0'});
+  body+=para(d.subj,{bold:true,center:true,sz:24});
+  body+=para(d.exam+' — '+d.year,{bold:true,center:true,sz:22});
+  body+=hRule(true);
+  /* Meta row */
+  var leftMeta='Class: '+d.cls+(d.setv?'     Div: '+d.setv:'')+(d.edate?'\nDate: '+d.edate:'');
+  var rightMeta='Max. Mark: '+d.marks+'\nTime: '+timeLabel(d.tmin);
+  body+=para(leftMeta+'          '+rightMeta,{sz:20});
+  /* Name line */
+  body+=para('Name: ________________________________     Roll No. __________',{sz:20});
+  body+=hRule(false);
+  /* Instructions */
+  if(d.insts.trim()){
+    body+=para('General Instructions:',{bold:true,sz:19});
+    d.insts.split('\n').filter(function(l){return l.trim();}).forEach(function(l,i){
+      body+=para((i+1)+'. '+l,{sz:18});
+    });
+    body+=hRule(false);
+  }
+  /* Questions */
   var qn=1;
   sections.forEach(function(sec){
     if(!sec.questions.length)return;
-    body+=para(sec.title,{bold:true,sz:22,spBefore:'120'});
+    body+='<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="120" w:after="0"/>'
+      +'<w:pBdr><w:top w:val="single" w:sz="6" w:space="1" w:color="666666"/>'
+      +'<w:bottom w:val="single" w:sz="6" w:space="1" w:color="666666"/></w:pBdr></w:pPr>'
+      +'<w:r><w:rPr><w:b/><w:caps/><w:sz w:val="22"/></w:rPr>'
+      +'<w:t>'+xmlEsc(sec.title)+'</w:t></w:r></w:p>';
     sec.questions.forEach(function(q){
-      body+=para(qn+'. '+(q.text||'(no text)')+' ['+q.marks+' mark'+(q.marks>1?'s':'')+']',{sz:20});
-      if(q.type==='mcq')['A','B','C','D'].forEach(function(L,i){if(q.opts[i])body+=para('   ('+L+') '+q.opts[i],{sz:19});});
+      body+=para(qn+'. '+(q.text||'(no text)')+' ('+q.marks+' mark'+(q.marks>1?'s':'')+')',{sz:22});
+      if(q.type==='mcq')['A','B','C','D'].forEach(function(L,i){if(q.opts[i])body+=para('   ('+L+') '+q.opts[i],{sz:20});});
       if(q.type==='match'&&q.pairs.length){
-        body+=para('Column A                        Column B',{bold:true,sz:19});
-        q.pairs.forEach(function(p,i){body+=para('  '+(i+1)+'. '+(p.l||'')+'       '+romanUpper(i+1)+'. '+(p.r||''),{sz:19});});
+        body+=para('Column A                              Column B',{bold:true,sz:20});
+        q.pairs.forEach(function(p,i){body+=para('  '+(i+1)+'. '+(p.l||'')+'            '+romanUpper(i+1)+'. '+(p.r||''),{sz:20});});
       }
       if(q.type==='table'){
-        body+=para(q.headers.join('  |  '),{bold:true,sz:19});
-        q.rows.forEach(function(row){body+=para(row.join('  |  '),{sz:19});});
+        body+=para(q.headers.join('   |   '),{bold:true,sz:20});
+        q.rows.forEach(function(row){body+=para(row.join('   |   '),{sz:20});});
       }
       if(q.type==='image'&&q.imgData){
         var rId='rImg'+window._docxImgRefs.length,idx=window._docxImgRefs.length+1;
@@ -851,23 +994,20 @@ function buildDocxXml(d){
     +'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
     +'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
     +'<w:body>'+body
-    +'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr>'
+    +'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900"/></w:sectPr>'
     +'</w:body></w:document>';
 }
-
 function buildAndEmbedImages(zip,imgRefs){
   var rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
   var mf=zip.folder('word/media');
   imgRefs.forEach(function(ir,i){
     var m=ir.data.match(/^data:([^;]+);base64,(.+)$/);if(!m)return;
     var ext=(m[1].split('/')[1]||'png').replace('jpeg','jpg');
-    var fname='img'+(i+1)+'.'+ext;
-    mf.file(fname,m[2],{base64:true});
+    var fname='img'+(i+1)+'.'+ext;mf.file(fname,m[2],{base64:true});
     rels+='<Relationship Id="'+ir.rId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+fname+'"/>';
   });
   return rels+'</Relationships>';
 }
-
 function generateDocx(xml,d){
   if(typeof JSZip==='undefined'){showToast('JSZip not loaded.');return;}
   var imgRefs=window._docxImgRefs||[];
@@ -877,36 +1017,19 @@ function generateDocx(xml,d){
   zip.folder('word').file('document.xml',xml);
   zip.folder('word/_rels').file('document.xml.rels',buildAndEmbedImages(zip,imgRefs));
   zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
-    .then(function(blob){
-      var fname=safeFilename(d)+'.docx';
-      triggerDownload(blob,fname);
-      showToast('📄 DOCX: '+fname);
-    });
+    .then(function(blob){var fname=safeFilename(d)+'.docx';triggerDownload(blob,fname);showToast('📄 DOCX: '+fname);});
 }
-
-function safeFilename(d){
-  return(d.subj+' Class '+d.cls+' '+d.exam).replace(/[^a-zA-Z0-9 \-_.]/g,'_').replace(/\s+/g,'_').slice(0,80);
-}
+function safeFilename(d){return(d.subj+' Class '+d.cls+' '+d.exam).replace(/[^a-zA-Z0-9 \-_.]/g,'_').replace(/\s+/g,'_').slice(0,80);}
 function triggerDownload(blob,fname){
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();
+  var url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=fname;document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   APP — SAVE / LOAD / SHARE
-   KEY FIX: WhatsApp deep-link uses different schemes per platform
-   Android: intent:// OR direct package open
-   iOS:     whatsapp://
-   Desktop: web.whatsapp.com
-═══════════════════════════════════════════════════════════════════ */
+/* ══ APP — SAVE / LOAD / SHARE ══ */
 var APP=(function(){
   var SAVES_KEY='qpm_saves_v2',AUTO_KEY='qpm_auto_v2',saveTimer=null;
-
-  function scheduleSave(){
-    setSaveState('saving');clearTimeout(saveTimer);
-    saveTimer=setTimeout(autoSave,1800);
-  }
+  function scheduleSave(){setSaveState('saving');clearTimeout(saveTimer);saveTimer=setTimeout(autoSave,1800);}
   function setSaveState(state,msg){
     var dot=document.getElementById('saveDot'),st=document.getElementById('saveStatus');
     if(state==='saving'){dot.className='save-dot saving';st.innerHTML='Saving…';}
@@ -971,7 +1094,6 @@ var APP=(function(){
   function closeSaves(){document.getElementById('savesModal').style.display='none';}
   function loadSave(i){var saves=getSaves(),s=saves[i];if(!s)return;if(!confirm('Load "'+s._name+'"? Current work will be replaced.'))return;restoreState(s);closeSaves();showToast('📂 Loaded "'+s._name+'"');}
   function deleteSave(i){if(!confirm('Delete this save?'))return;var saves=getSaves();saves.splice(i,1);localStorage.setItem(SAVES_KEY,JSON.stringify(saves));updateSavesCount();openSaves();showToast('🗑 Save deleted');}
-
   function restoreState(state){
     if(!state)return;
     var d=state.details||{};
@@ -993,156 +1115,56 @@ var APP=(function(){
     });
     goStep(state.curStep||0);
   }
-
-  /* ─────────────────────────────────────────────────────────
-     PREPARE SHARE — builds + downloads the DOCX file
-  ───────────────────────────────────────────────────────── */
   function prepareShare(){
-    var btn=document.getElementById('prepBtn');
-    var msg=document.getElementById('preparingMsg');
-    var badge=document.getElementById('shareReadyBadge');
-    btn.disabled=true;
-    msg.style.display='block';
-    badge.classList.remove('show');
-
-    buildPreview();
-    var d=getDetails();
-    var xml=buildDocxXml(d);
-    if(typeof JSZip==='undefined'){
-      showToast('JSZip not loaded.');
-      msg.style.display='none';btn.disabled=false;return;
-    }
+    var btn=document.getElementById('prepBtn'),msg=document.getElementById('preparingMsg'),badge=document.getElementById('shareReadyBadge');
+    btn.disabled=true;msg.style.display='block';badge.classList.remove('show');
+    buildPreview();var d=getDetails();var xml=buildDocxXml(d);
+    if(typeof JSZip==='undefined'){showToast('JSZip not loaded.');msg.style.display='none';btn.disabled=false;return;}
     var imgRefs=window._docxImgRefs||[];
     var zip=new JSZip();
-    zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Default Extension="webp" ContentType="image/webp"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+    zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Default Extension="webp" ContentType="image/webp"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
     zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
     zip.folder('word').file('document.xml',xml);
     zip.folder('word/_rels').file('document.xml.rels',buildAndEmbedImages(zip,imgRefs));
     zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
       .then(function(blob){
-        var fname=safeFilename(d)+'.docx';
-        triggerDownload(blob,fname);
-        msg.style.display='none';
-        badge.classList.add('show');
+        var fname=safeFilename(d)+'.docx';triggerDownload(blob,fname);
+        msg.style.display='none';badge.classList.add('show');
         document.getElementById('shareReadyName').textContent=fname;
-        btn.disabled=false;
-        showToast('✓ File ready: '+fname);
-      }).catch(function(err){
-        msg.style.display='none';btn.disabled=false;
-        showToast('❌ Build failed: '+err.message);
-      });
+        btn.disabled=false;showToast('✓ File ready: '+fname);
+      }).catch(function(err){msg.style.display='none';btn.disabled=false;showToast('❌ '+err.message);});
   }
-
-  /* ─────────────────────────────────────────────────────────────────
-     openShareApp()
-     WhatsApp on Android:
-       - Intent URI: intent:#Intent;action=android.intent.action.SEND;type=*\/*;package=com.whatsapp;end
-       - OR just navigate: whatsapp://send  (works on most Android)
-     WhatsApp on iOS:
-       - whatsapp://send (opens app)
-     Desktop:
-       - web.whatsapp.com
-
-     Telegram on Android: tg://  (works — user confirmed)
-     Telegram on iOS: tg://
-     Telegram Desktop: web.telegram.org
-
-     Gmail Android: intent:#Intent;action=android.intent.action.MAIN;package=com.google.android.gm;end
-     Gmail iOS: googlegmail://
-     Gmail Desktop: mail.google.com compose URL
-  ─────────────────────────────────────────────────────────────────── */
   function openShareApp(id){
-    var d=getDetails();
-    var subjEncoded=encodeURIComponent(d.subj+' Question Paper — '+d.exam);
-
+    var d=getDetails(),subj=encodeURIComponent(d.subj+' Question Paper — '+d.exam);
     if(id==='wa'){
-      if(isAndroid){
-        // On Android, use intent URI — opens WhatsApp app directly
-        // If WhatsApp not installed, falls back to Play Store
-        var intentUrl='intent://send#Intent;action=android.intent.action.SEND;'
-          +'type=text/plain;'
-          +'S.android.intent.extra.TEXT='+encodeURIComponent('Question Paper: '+d.subj+' | Class '+d.cls)+';'
-          +'package=com.whatsapp;'
-          +'S.browser_fallback_url=https://web.whatsapp.com;end';
-        window.location.href=intentUrl;
-      } else if(isIOS){
-        // iOS: whatsapp://send works reliably
-        window.location.href='whatsapp://send?text='+encodeURIComponent('Question Paper: '+d.subj+' | Class '+d.cls);
-      } else {
-        window.open('https://web.whatsapp.com','_blank');
-      }
-
-    } else if(id==='tg'){
-      if(isMobile){
-        // tg:// deep-link — confirmed working on Android by user
-        window.location.href='tg://';
-        // Fallback: if app not installed, open web after delay
-        setTimeout(function(){
-          if(!document.hidden) window.open('https://web.telegram.org','_blank');
-        },2000);
-      } else {
-        window.open('https://web.telegram.org','_blank');
-      }
-
-    } else if(id==='gm'){
-      if(isAndroid){
-        // Android: intent URI for Gmail
-        var gmIntent='intent://compose#Intent;action=android.intent.action.SENDTO;'
-          +'S.android.intent.extra.SUBJECT='+encodeURIComponent(d.subj+' Question Paper — '+d.exam)+';'
-          +'package=com.google.android.gm;'
-          +'S.browser_fallback_url=https://mail.google.com/mail/?view=cm%26su='+subjEncoded+';end';
-        window.location.href=gmIntent;
-      } else if(isIOS){
-        // iOS Gmail app
-        window.location.href='googlegmail:///co?subject='+subjEncoded+'&body='+encodeURIComponent('Please find the question paper attached.');
-        setTimeout(function(){
-          if(!document.hidden) window.location.href='mailto:?subject='+subjEncoded;
-        },1500);
-      } else {
-        window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+subjEncoded,'_blank');
-      }
-
-    } else if(id==='more'){
-      // Native share API (mobile) or fallback
-      if(isMobile && navigator.share){
-        navigator.share({
-          title:d.subj+' Question Paper',
-          text:'Question Paper: '+d.subj+' Class '+d.cls+' — '+d.exam+'\nFile downloaded to Downloads folder.'
-        }).then(function(){
-          showToast('✓ Shared');
-        }).catch(function(err){
-          if(err.name!=='AbortError') showToast('File is in Downloads — attach manually');
-        });
-      } else {
-        showToast('📂 File saved in Downloads — attach it in any app');
-      }
+      if(isAndroid)window.location.href='intent://send#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT='+encodeURIComponent('QP: '+d.subj+' Class '+d.cls)+';package=com.whatsapp;S.browser_fallback_url=https://web.whatsapp.com;end';
+      else if(isIOS)window.location.href='whatsapp://send?text='+encodeURIComponent('QP: '+d.subj+' Class '+d.cls);
+      else window.open('https://web.whatsapp.com','_blank');
+    }else if(id==='tg'){
+      if(isMobile){window.location.href='tg://';setTimeout(function(){if(!document.hidden)window.open('https://web.telegram.org','_blank');},2000);}
+      else window.open('https://web.telegram.org','_blank');
+    }else if(id==='gm'){
+      if(isAndroid)window.location.href='intent://compose#Intent;action=android.intent.action.SENDTO;S.android.intent.extra.SUBJECT='+encodeURIComponent(d.subj+' QP')+';package=com.google.android.gm;S.browser_fallback_url=https://mail.google.com;end';
+      else if(isIOS){window.location.href='googlegmail:///co?subject='+subj;setTimeout(function(){if(!document.hidden)window.location.href='mailto:?subject='+subj;},1500);}
+      else window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+subj,'_blank');
+    }else if(id==='more'){
+      if(isMobile&&navigator.share)navigator.share({title:d.subj+' QP',text:'QP: '+d.subj+' Class '+d.cls}).catch(function(){});
+      else showToast('📂 File saved in Downloads — attach in any app');
     }
   }
-
   function init(){
-    updateSavesCount();
-    renderShareButtons();
-    try{
-      var auto=localStorage.getItem(AUTO_KEY);
-      if(auto){restoreState(JSON.parse(auto));setSaveState('saved','Restored from auto-save');return;}
-    }catch(e){}
+    updateSavesCount();renderShareButtons();
+    try{var auto=localStorage.getItem(AUTO_KEY);if(auto){restoreState(JSON.parse(auto));setSaveState('saved','Restored from auto-save');return;}}catch(e){}
     if(!sections.length)addSec('Section A');
     setSaveState('idle','Ready');
   }
   setTimeout(init,100);
-
-  return{
-    scheduleSave:scheduleSave,saveNow:saveNow,saveAs:saveAs,
-    openSaves:openSaves,closeSaves:closeSaves,loadSave:loadSave,deleteSave:deleteSave,
-    prepareShare:prepareShare,openShareApp:openShareApp
-  };
+  return{scheduleSave:scheduleSave,saveNow:saveNow,saveAs:saveAs,openSaves:openSaves,closeSaves:closeSaves,loadSave:loadSave,deleteSave:deleteSave,prepareShare:prepareShare,openShareApp:openShareApp};
 })();
 
-/* ═══════════════════════════════════
-   SAMPLE + CLEAR
-═══════════════════════════════════ */
+/* ══ SAMPLE + CLEAR ══ */
 function loadSample(){
-  if(!confirm('Load sample paper? Current work will be replaced.'))return;
+  if(!confirm('Load sample paper?'))return;
   sections=[];document.getElementById('secsContainer').innerHTML='';secIdCounter=0;qIdCounter=0;
   var s1={id:'sec_'+(++secIdCounter),title:'Section A — Very Short Answer',questions:[]};
   s1.questions.push({id:'q_'+(++qIdCounter),type:'text',text:'What is the full form of CPU?',marks:1});
@@ -1166,9 +1188,7 @@ function clearAll(){
   addSec('Section A');goStep(0);showToast('🗑 Reset done');
 }
 
-/* ═══════════════════════════════════
-   HELPERS
-═══════════════════════════════════ */
+/* ══ HELPERS ══ */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function esc2(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function xmlEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');}
