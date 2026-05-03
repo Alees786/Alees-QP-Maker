@@ -931,15 +931,116 @@ function buildDocxXml(d){
       +'<w:r><w:rPr><w:b/><w:caps/><w:sz w:val="22"/></w:rPr>'
       +'<w:t>'+xmlEsc(sec.title)+'</w:t></w:r></w:p>';
     sec.questions.forEach(function(q){
-      body+=para(qn+'. '+(q.text||'(no text)')+' ('+q.marks+' mark'+(q.marks>1?'s':'')+')',{sz:22});
-      if(q.type==='mcq')['A','B','C','D'].forEach(function(L,i){if(q.opts[i])body+=para('   ('+L+') '+q.opts[i],{sz:20});});
-      if(q.type==='match'&&q.pairs.length){
-        body+=para('Column A                              Column B',{bold:true,sz:20});
-        q.pairs.forEach(function(p,i){body+=para('  '+(i+1)+'. '+(p.l||'')+'            '+romanUpper(i+1)+'. '+(p.r||''),{sz:20});});
+      /* Question row: text left | marks right */
+      var qTextCell=tcp(br(qn+'. ',22)+nr(q.text||'(no text)',22));
+      var qMarkCell=tcp(nr('('+q.marks+' mark'+(q.marks>1?'s':'')+')',20),'right');
+      body+='<w:tbl>'
+        +'<w:tblPr>'
+        +'<w:tblW w:w="'+TW+'" w:type="dxa"/>'
+        +'<w:tblBorders>'+NB+'</w:tblBorders>'
+        +'<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar>'
+        +'</w:tblPr>'
+        +'<w:tblGrid><w:gridCol w:w="8206"/><w:gridCol w:w="1900"/></w:tblGrid>'
+        +'<w:tr>'+tc(qTextCell,8206)+tc(qMarkCell,1900)+'</w:tr>'
+        +'</w:tbl>';
+
+      /* ── MCQ: 2-column borderless table, indented ── */
+      if(q.type==='mcq'){
+        var validOpts=[];
+        ['A','B','C','D'].forEach(function(L,i){if(q.opts[i])validOpts.push({L:L,v:q.opts[i]});});
+        if(validOpts.length){
+          /* Pair them up into rows of 2 */
+          var mcqRows='';
+          for(var mi=0;mi<validOpts.length;mi+=2){
+            var o1=validOpts[mi],o2=validOpts[mi+1];
+            var c1=tcp(br('('+o1.L+') ')+nr(o1.v,20));
+            var c2=o2?tcp(br('('+o2.L+') ')+nr(o2.v,20)):tcp(nr(''));
+            mcqRows+='<w:tr>'+tc(c1,4800)+tc(c2,5306)+'</w:tr>';
+          }
+          body+='<w:tbl>'
+            +'<w:tblPr>'
+            +'<w:tblW w:w="'+TW+'" w:type="dxa"/>'
+            +'<w:tblBorders>'+NB+'</w:tblBorders>'
+            +'<w:tblInd w:w="440" w:type="dxa"/>'
+            +'<w:tblCellMar><w:top w:w="30" w:type="dxa"/><w:bottom w:w="30" w:type="dxa"/><w:left w:w="60" w:type="dxa"/><w:right w:w="60" w:type="dxa"/></w:tblCellMar>'
+            +'</w:tblPr>'
+            +'<w:tblGrid><w:gridCol w:w="4800"/><w:gridCol w:w="5306"/></w:tblGrid>'
+            +mcqRows
+            +'</w:tbl>';
+        }
       }
+
+      /* ── Match the Following: proper bordered table ── */
+      if(q.type==='match'&&q.pairs.length){
+        var brd='<w:top w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+               +'<w:left w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+               +'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+               +'<w:right w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>';
+        function mtc(innerXml, w, isHdr){
+          return'<w:tc>'
+            +'<w:tcPr>'
+            +'<w:tcW w:w="'+w+'" w:type="dxa"/>'
+            +'<w:tcBorders>'+brd+'</w:tcBorders>'
+            +(isHdr?'<w:shd w:val="clear" w:color="auto" w:fill="EFEFEF"/>':'')
+            +'<w:tcMar><w:top w:w="60" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tcMar>'
+            +'</w:tcPr>'
+            +innerXml
+            +'</w:tc>';
+        }
+        var MW=9306, MA=4653, MB=4653;
+        var matchRows='';
+        /* Header row */
+        matchRows+='<w:tr>'
+          +mtc(tcp(br('Column A',20),'center'),MA,true)
+          +mtc(tcp(br('Column B',20),'center'),MB,true)
+          +'</w:tr>';
+        /* Data rows */
+        q.pairs.forEach(function(p,i){
+          matchRows+='<w:tr>'
+            +mtc(tcp(nr((i+1)+'. '+(p.l||''),20)),MA,false)
+            +mtc(tcp(nr(romanUpper(i+1)+'. '+(p.r||''),20)),MB,false)
+            +'</w:tr>';
+        });
+        body+='<w:tbl>'
+          +'<w:tblPr>'
+          +'<w:tblW w:w="'+MW+'" w:type="dxa"/>'
+          +'<w:tblInd w:w="440" w:type="dxa"/>'
+          +'</w:tblPr>'
+          +'<w:tblGrid><w:gridCol w:w="'+MA+'"/><w:gridCol w:w="'+MB+'"/></w:tblGrid>'
+          +matchRows
+          +'</w:tbl>';
+      }
+
+      /* ── Data Table: proper bordered table ── */
       if(q.type==='table'){
-        body+=para(q.headers.join('   |   '),{bold:true,sz:20});
-        q.rows.forEach(function(row){body+=para(row.join('   |   '),{sz:20});});
+        var dtBrd='<w:top w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+                 +'<w:left w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+                 +'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>'
+                 +'<w:right w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/>';
+        var cols=q.headers.length;
+        var colW=Math.floor(9306/cols);
+        function dtc(innerXml, isHdr){
+          return'<w:tc>'
+            +'<w:tcPr>'
+            +'<w:tcW w:w="'+colW+'" w:type="dxa"/>'
+            +'<w:tcBorders>'+dtBrd+'</w:tcBorders>'
+            +(isHdr?'<w:shd w:val="clear" w:color="auto" w:fill="EFEFEF"/>':'')
+            +'<w:tcMar><w:top w:w="60" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tcMar>'
+            +'</w:tcPr>'
+            +innerXml
+            +'</w:tc>';
+        }
+        var gridCols='';
+        for(var ci=0;ci<cols;ci++)gridCols+='<w:gridCol w:w="'+colW+'"/>';
+        var dtRows='<w:tr>'+q.headers.map(function(h){return dtc(tcp(br(h,20)),true);}).join('')+'</w:tr>';
+        q.rows.forEach(function(row){
+          dtRows+='<w:tr>'+row.map(function(cell){return dtc(tcp(nr(cell,20)),false);}).join('')+'</w:tr>';
+        });
+        body+='<w:tbl>'
+          +'<w:tblPr><w:tblW w:w="9306" w:type="dxa"/><w:tblInd w:w="440" w:type="dxa"/></w:tblPr>'
+          +'<w:tblGrid>'+gridCols+'</w:tblGrid>'
+          +dtRows
+          +'</w:tbl>';
       }
       if(q.type==='image'&&q.imgData){
         var rId='rImg'+window._docxImgRefs.length,idx=window._docxImgRefs.length+1;
