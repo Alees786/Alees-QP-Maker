@@ -562,10 +562,10 @@ var APP_CREDIT = (function() {
     var now = new Date(), h = now.getHours(), m = now.getMonth() + 1, d = now.getDate();
     var all = builtIn.concat(gc());
     for (var i = 0; i < all.length; i++) { if (all[i].m === m && all[i].d === d) return { msg: all[i].msg, emoji: all[i].emoji }; }
-    if (h >= 5 && h < 12) return { msg: 'Good morning!', emoji: 'AM' };
-    if (h >= 12 && h < 17) return { msg: 'Good afternoon!', emoji: 'PM' };
-    if (h >= 17 && h < 21) return { msg: 'Good evening!', emoji: 'EV' };
-    return { msg: 'Good night!', emoji: 'NT' };
+    if (h >= 5 && h < 12) return { msg: 'Good morning!', emoji: '🌅' };
+    if (h >= 12 && h < 17) return { msg: 'Good afternoon!', emoji: '☀️' };
+    if (h >= 17 && h < 21) return { msg: 'Good evening!', emoji: '🌆' };
+    return { msg: 'Good night!', emoji: '🌙' };
   }
   var g = getGreeting();
   document.getElementById('greetEmoji').textContent = g.emoji;
